@@ -1,6 +1,12 @@
 1. How could you design your system so that each race could be easily generated? 
 Additionally, how difficult does such a solution make adding additional classes?
-- using map <string, characterObject>
+- We can employ the map structure in c++ and create a map <char, vector <int> info> m, 
+so when user enters a letter representing the race, we search through m to find the
+vector of integers that matches the letter from user input. We then construct a
+player object that contains three integer fields: hp, atk, and def, and their values will
+be initialized to info[0], info[1], and info[2] accordingly. Using this approach, if we
+were to add additional classes, we can just push another <char, vector <int> info> pair
+to m without modifying other parts of the code.
 
 2. How does your system handle generating different enemies? Is it different from 
 how you generate the player character? Why or why not?
