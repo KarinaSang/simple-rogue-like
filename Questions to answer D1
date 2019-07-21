@@ -1,0 +1,19 @@
+1. How could you design your system so that each race could be easily generated? 
+Additionally, how difficult does such a solution make adding additional classes?
+
+2. How does your system handle generating different enemies? Is it different from 
+how you generate the player character? Why or why not?
+
+3. How could you implement special abilities for different enemies. 
+For example, gold stealing for goblins, health regeneration for trolls, 
+health stealing for vampires, etc.?
+
+4. What design pattern could you use to model the effects of temporary potions(Would/Boost/Atk/Def) 
+so that you do not need to explicitly track which potions the player character has consumed on 
+any particular floor?
+
+5. How could you generate items so that the generation of Treasure, Potions, and major items reuses 
+as much code as possible? That is for example, how would you structure your system so that the generation
+of a potion and then generation of treasure does not duplicate code? How could you resuse the code used
+to protect both dragon hoards and the Barrier Suit?
+
