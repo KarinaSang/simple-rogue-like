@@ -12,7 +12,12 @@ to our BasicPlayer without creating additional classes.
 
 2. How does your system handle generating different enemies? Is it different from 
 how you generate the player character? Why or why not?
-- using map<string, enemyObject>
+- We will use a similar approach to generate enemies as generating the player character. We
+will also have a list of ability decorators for generating different enemies and a BasicEnemy
+class. Generating enemies and player character are similar because enemies also strictly differ from each
+other in terms of their special ability, and enemies' base ratio can be modified by just having a
+BasicEnemy class. However, we will have an extra field in a BasicEnemy called "hostile", because we want
+to store the information of whether or not the current enemy will attack the player character.
 
 3. How could you implement special abilities for different enemies. 
 For example, gold stealing for goblins, health regeneration for trolls, 
