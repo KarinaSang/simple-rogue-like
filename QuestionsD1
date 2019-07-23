@@ -23,6 +23,9 @@ to store the information of whether or not the current enemy will attack the pla
 For example, gold stealing for goblins, health regeneration for trolls, 
 health stealing for vampires, etc.?
 - have a function called *specialAbility*, and override the function in each enemy class
+In our UML we decided to use a decorator pattern to add special abilities to enemies in general. 
+As per the basic game, we are implementing special abilities for the dragon and the merchant.
+We could add on more decorators to add special abilities to goblins, trolls, vampire, etc. 
 
 4. What design pattern could you use to model the effects of temporary potions(Would/Boost/Atk/Def) 
 so that you do not need to explicitly track which potions the player character has consumed on 
