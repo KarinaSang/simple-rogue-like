@@ -1,12 +1,14 @@
 1. How could you design your system so that each race could be easily generated? 
 Additionally, how difficult does such a solution make adding additional classes?
-- We can employ the map structure in c++ and create a map <char, vector <int> info> m, 
-so when user enters a letter representing the race, we search through m to find the
-vector of integers that matches the letter from user input. We then construct a
-player object that contains three integer fields: hp, atk, and def, and their values will
-be initialized to info[0], info[1], and info[2] accordingly. Using this approach, if we
-were to add additional classes, we can just push another <char, vector <int> info> pair
-to m without modifying other parts of the code.
+- We can employ Decorator design pattern. We will have one base class called Player which
+has a list of attributes including HP, Atk, and Def, as well as a function called "specialAbility".
+We will also have a list of ability decorators, so we can modify the BasicPlayer with these
+decorators. With this approach, it is very easy to generate each race because we do not
+have to have subclasses for each race, we can just create a BasicPlayer with the corresponding
+race base ratios and apply different ability decorators on BasicPlayer for different races. Adding
+additional races would at most require an extra ability decorator; if we want to create an elf-orc,
+and we already have an elf and orc ability decorator, then we can simply apply both ability decorators
+to our BasicPlayer without creating additional classes.
 
 2. How does your system handle generating different enemies? Is it different from 
 how you generate the player character? Why or why not?
