@@ -33,4 +33,9 @@ any particular floor?
 as much code as possible? That is for example, how would you structure your system so that the generation
 of a potion and then generation of treasure does not duplicate code? How could you resuse the code used
 to protect both dragon hoards and the Barrier Suit?
+- Since the generation of Treasure, Potions, and major items is random, we can utilize the template syntax that
+c++ provides. We will create a template for a function that does random generation. The function will have a return
+type that changes depending on whether we are calling it with treasure or potions, so treasure and potions can both 
+use the same skeleton function. Similarly, we can create skeleton function to let a dragon guard "something", which can
+either be a dragon hoard or the Barrier Suit using templates. 
 
