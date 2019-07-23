@@ -22,22 +22,27 @@ to store the information of whether or not the current enemy will attack the pla
 3. How could you implement special abilities for different enemies. 
 For example, gold stealing for goblins, health regeneration for trolls, 
 health stealing for vampires, etc.?
-- have a function called *specialAbility*, and override the function in each enemy class
-In our UML we decided to use a decorator pattern to add special abilities to enemies in general. 
-As per the basic game, we are implementing special abilities for the dragon and the merchant.
+- We will have a function called "specialAbility", and override the function in each subclass of Enemy.
+We decided to use a decorator pattern to add special abilities to enemies in general. 
 We could add on more decorators to add special abilities to goblins, trolls, vampire, etc. 
+For example, we could have a goldStealing decorator class that allows us to add this special ability to 
+our BasicEnemy, which would make it a goblin.
 
-4. What design pattern could you use to model the effects of temporary potions(Would/Boost/Atk/Def) 
+4. What design pattern could you use to model the effects of temporary potions(Wound/Boost/Atk/Def) 
 so that you do not need to explicitly track which potions the player character has consumed on 
 any particular floor?
-- visitor?
+- We could use the template method design pattern to generailze the effects of temporary potions. In our base class 
+"TemporaryPotion", we would have two methods, modifyAttack and modifyDefence. This allows the subclasses of TemporaryPotion 
+to override the two methods. For example, an AttackBoostPotion is a TemporaryPotion, but it modifies the behaviour of 
+the modifyAttack method. We will then use the vector class to store all potions used, where the vector type is 
+TemporaryPotion, instead of the explicit types of potion.
 
 5. How could you generate items so that the generation of Treasure, Potions, and major items reuses 
 as much code as possible? That is for example, how would you structure your system so that the generation
 of a potion and then generation of treasure does not duplicate code? How could you resuse the code used
 to protect both dragon hoards and the Barrier Suit?
 - Since the generation of Treasure, Potions, and major items is random, we can utilize the template syntax that
-c++ provides. We will create a template for a function that does random generation. The function will have a return
+C++ provides. We will create a template for a function that does random generation. The function will have a return
 type that changes depending on whether we are calling it with treasure or potions, so treasure and potions can both 
 use the same skeleton function. Similarly, we can create skeleton function to let a dragon guard "something", which can
 either be a dragon hoard or the Barrier Suit using templates. 
