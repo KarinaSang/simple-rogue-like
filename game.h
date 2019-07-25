@@ -9,6 +9,7 @@ using namespace std;
 class Cell;
 class Player;
 class Enemy;
+class Potion;
 
 class Game{
 	vector <vector <Cell>> grid; //current floor
@@ -27,9 +28,12 @@ class Game{
 	int potionCount = 0;
 	int treasureCount = 0;
 	bool suitEquipped = false;
+	int score = 0;
 
 	Player *player;
 	vector <Enemy> enemies;
+	vector <Potion> tempPotions; //temporary potions collected on a specific floor
+
 	
 
 	public:
