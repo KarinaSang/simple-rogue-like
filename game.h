@@ -33,7 +33,7 @@ class Game{
 
 	unique_ptr <Player> player;
 	vector <Enemy> enemies;
-	vector <Potion> carriedPotions; //temporary potions collected on a specific floor
+	vector <Potion> carriedPotions; //potions not yet used
 
 	
 
