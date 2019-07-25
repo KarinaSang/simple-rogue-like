@@ -3,33 +3,37 @@
 #include <string>
 #include <vector>
 #include "object.h"
+#include "potion.h"
 
 using namespace std;
 
-class Potion;
 class Enemy;
 
 class Player : public Object{
 	//basic player info
 	int hp;
+	int maxhp;
 	int atk;
 	int def;
 	string race;
 	int gold = 0; //default to have zero gold
 	char display = '@'; //letter representing the player
 
+	string msg = ""; //for displaying the current action
+
 	//items
 	bool suitEquipped = false;
 	bool compassEquipped = false; //DO WE NEED THIS?
-	vector <Potion*> tempPotion; //list of potions used for the current floor
+	vector <Potion> tempPotion; //list of potions used for the current floor
 
 	public:
-	Player(int hp = 140, int atk = 20, int def = 20, string race = "human");
+	Player(int hp = 140, int maxhp = 140, int atk = 20, int def = 20, string race = "human");
 
 	//getter methods
 	int getHp() {return hp;}
 	int getAtk() {return atk;}
 	int getDef() {return def;}
+	int getMaxhp() {return maxhp;}
 	string getRace() {return race;}
 	bool hasSuit() {return suitEquipped;}
 	virtual int getGold(){return gold;}
@@ -45,7 +49,7 @@ class Player : public Object{
 	void removeAllPotion(); //removes effects of all temporary potions
 	void move(int x, int y); // moves x blocks right, y blocks down
 	void attack(Enemy &e); //attacks an enemy
-	virtual void addPotion(Potion *p){tempPotion.emplace_back(p);}
+	virtual void addPotion(Potion &p);
 };
 
 

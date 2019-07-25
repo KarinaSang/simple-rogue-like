@@ -4,7 +4,7 @@
 
 class ElfDecorator : public PlayerDecorator{
 	public:
-	void addPotion(Potion*) override; //negative potions have positive effect
+	void addPotion(Potion&) override; //negative potions have positive effect
 };
 
 #endif
