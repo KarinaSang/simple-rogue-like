@@ -32,13 +32,13 @@ class Game{
 	int score = 0;
 
 	unique_ptr <Player> player;
-	vector <Enemy> enemies;
-	vector <Potion> carriedPotions; //potions not yet used
+	vector <unique_ptr<Enemy>> enemies;
+	vector <unique_ptr<Potion>> carriedPotions; //potions not yet used
 
 	
 
 	public:
-	Game(Player *);
+	Game(unique_ptr <Player>);
 	~Game();
 	void init();
 	void nextFloor(); //go to next floor
