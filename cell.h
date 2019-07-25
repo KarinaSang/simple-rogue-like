@@ -2,13 +2,14 @@
 #define CELL_H
 #include <vector>
 #include <string>
+#include <memory>
 using namespace std;
 
 
 class Cell{
 	int row, col;
 	char display;
-	Object *obj = nullptr; //could be either a player, enemy, potion, or treasure
+	unique_ptr <Object> obj; //could be either a player, enemy, potion, or treasure
 
 	public:
 	Cell(int row, int col, char display);

@@ -5,7 +5,7 @@
 class PlayerDecorator : public Player{
 	public:
 	virtual int getGold();
-	virtual void addPotion(Potion*);
+	virtual void addPotion(Potion &p){Player::addPotion(p);}
 };
 
 #endif
