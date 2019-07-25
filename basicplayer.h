@@ -5,7 +5,7 @@
 class BasicPlayer : public Player{
 	public:
 	int getGold() override;
-	void addPotion(Potion*) override;
+	void addPotion(Potion&) override;
 };
 
 #endif

@@ -1,5 +1,6 @@
 #include "elfdecorator.h"
 
-void ElfDecorator::addPotion(Potion *p){
-	//if potion has negative effect make it positive
+void ElfDecorator::addPotion(Potion &p){
+	p.setEffect(true);
+	PlayerDecorator::addPotion(p);
 }
