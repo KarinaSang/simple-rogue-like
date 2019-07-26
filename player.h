@@ -4,6 +4,7 @@
 #include <vector>
 #include <memory>
 #include "potion.h"
+#include "treasure.h" 
 #include "characterinfo.h"
 
 using namespace std;
@@ -40,6 +41,7 @@ class Player{
 
 	bool isDead(){return (curInfo.hp == 0);}
 	void resetPlayer(); //removes effects of all temporary potions
+	void collect(shared_ptr <Treasure>);
 	virtual void usePotion(shared_ptr <Potion>);
 };
 
