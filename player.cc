@@ -1,15 +1,5 @@
 #include "player.h"
 
-Player::Player (int hp, int atk, int def, string race): race{race}{
-	curInfo.hp = hp;
-	defaultInfo.hp = hp;
-	curInfo.atk = atk;
-	defaultInfo.atk = atk;
-	curInfo.def = def;
-	defaultInfo.def = def;
-}
-
-
 void Player::resetPlayer(){
 	curInfo.atk = defaultInfo.atk;
 	curInfo.def = defaultInfo.def;

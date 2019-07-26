@@ -3,9 +3,10 @@
 #include "player.h"
 
 class PlayerDecorator : public Player{
+	shared_ptr <Player> player;
 	public:
-	virtual int getGold();
-	virtual void usePotion(shared_ptr <Potion> p){Player::usePotion(p);}
+	virtual void addGold(int);
+	virtual void usePotion(shared_ptr <Potion> p){player->usePotion(p);}
 };
 
 #endif

@@ -4,7 +4,7 @@
 
 class OrcDecorator : public PlayerDecorator{
 	public:
-	int getGold() override;
+	void addGold(int) override;
 };
 
 #endif

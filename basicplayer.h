@@ -4,7 +4,9 @@
 
 class BasicPlayer : public Player{
 	public:
-	int getGold() override;
+	BasicPlayer(int hp = 140, int atk = 20, int def = 20, string race = "human");
+		
+	void addGold(int) override;
 	void usePotion(shared_ptr <Potion>) override;
 };
 

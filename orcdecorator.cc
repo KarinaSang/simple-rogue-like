@@ -1,5 +1,5 @@
 #include "orcdecorator.h"
 
-int OrcDecorator::getGold(){
-	return this->getGold()*0.5;
+void OrcDecorator::addGold(int n){
+	PlayerDecorator::addGold(n*0.5);
 }
