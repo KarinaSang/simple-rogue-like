@@ -1,11 +1,11 @@
 #include "dragon.h"
 
-Dragon::Dragon(Enemy *e) : EnemyDecorator(e) {}
-
-void Dragon::specialAbility() {
-	if (hp == 0) {
-		hoard->collectable = true;
-	}
+Dragon::Dragon(shared_ptr <Cell> t) : treasure{t} {
+	//set base ratio for dragon
+	//...
+	value = 0;
+	hostile = false;	
 }
+
 
 

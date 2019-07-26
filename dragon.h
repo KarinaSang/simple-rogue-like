@@ -1,14 +1,16 @@
 #ifndef DRAGON_H
 #define DRAGON_H
-#include "enemyDecorator.h"
+#include <memory>
+#include "enemy.h"
+#include "cell.h"
 
-class Dragon : public EnemyDecorator {
-	Treasure *hoard; gt
+
+class Dragon : public Enemy {
+	shared_ptr <Cell> treasure; //the treasure this dragon is guarding
 
 	public:
-	Dragon(Enemy *e);
-
-	void specialAbility() override;
-}
+	Dragon(shared_ptr <Cell> treasure);
+	shared_ptr<Cell> getTreasure(){return treasure;}
+};
 
 #endif

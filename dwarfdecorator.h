@@ -4,7 +4,7 @@
 
 class DwarfDecorator : public PlayerDecorator{
 	public:
-	int getGold() override;
+	void addGold(int) override;
 };
 
 #endif

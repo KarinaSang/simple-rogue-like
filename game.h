@@ -6,6 +6,7 @@
 #include <memory>
 #include "cell.h"
 #include "textdisplay.h"
+#include "position.h"
 
 using namespace std;
 
@@ -27,24 +28,32 @@ class Game{
 	int treasureCount = 0;
 	bool suitEquipped = false;
 
-	shared_ptr <Player> player;
-	vector <shared_ptr<Enemy>> enemies;
+	Position player;
+	vector <Position> enemies; //stores the position of generated enemies
 	vector <shared_ptr<Potion>> carriedPotions; //potions not yet used
 
 	
 
 	public:
-	Game(shared_ptr <Player>);
+	Game();
 	~Game() = default;
 	void init();
 	void nextFloor(); //go to next floor
 	int calculateScore(); //calculate current score
 
 	//player associated functions
-	void move(int x, int y);
-	void attack(int x, int y); //attacks something in certain direction
-	void consume(int x, int y); //consumes something(potion) in certain direction
-	void collect(int row, int col); //collects gold at current spot
+	void playerMove(int x, int y);
+	void playerAttack(int x, int y); //attacks something in certain direction
+	void playerConsume(int x, int y); //consumes something(potion) in certain direction
+	void playerCollect(int row, int col); //collects gold at current spot
+
+	//enemy associated functions
+	void enemyRadiusCheck(); //checks for the list of enemies, if there is player around them
+  	//if a player is found, then the enemy will attack the player, else the enemy moves
+	void enemyMove(int x, int y);
+
+
+
 	friend ostream &operator << (ostream &out, const Game &g); 
 };
 

@@ -1,17 +1,19 @@
 #ifndef TREASURE_H
 #define TREASURE_H
-#include <string>
-#include "object.h"
 
-class Treasure : public Object {
+class Treasure{
 	int value;
 	bool collectable;
-	string msg;
-	public:
-	Treasure(int value);
-	~Treasure();
 
-	int collect(Player *p);
-}
+	public:
+	Treasure(int value, bool collectable);
+	
+	//getter
+	int getValue(){return value;}
+	bool isCollectable(){return collectable;}
+
+	//setter
+	void setCollectable(){collectable = true;}
+};
 
 #endif

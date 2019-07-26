@@ -4,10 +4,10 @@
 
 class EnemyDecorator : public Enemy {
 	protected: 
-	Enemy *enemy;
+	shared_ptr <Enemy> enemy;
 
 	public:
-	EnemyDecorator(Enemy *enemy);
+	EnemyDecorator(shared_ptr <Enemy> enemy) : enemy{enemy} {}
 	virtual ~EnemyDecorator();
 	
 	virtual void specialAbility() = 0;

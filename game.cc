@@ -1,6 +1,6 @@
 #include "game.h"
 
-Game::Game(shared_ptr <Player> p) : player{make_shared<Player>(*p)} {}
+Game::Game() {}
 
 
 void Game::init(){
@@ -21,7 +21,7 @@ void Game::init(){
 						break;
 					 }
 				case '@': //player
-					grid[i][j].addPlayer(player);
+					
 					break;
 				case 'V': //vampire
 					//create an enemy = new Vampire
@@ -82,7 +82,37 @@ void Game::nextFloor(){
 }
 
 int Game::calculateScore(){
-	return player->getGold();
+	return grid[player.x][player.y].getPlayer()->getGold();
+}
+
+
+//player specific methods
+void Game::playerMove(int x, int y){
+
+}
+
+
+void Game::playerAttack(int x, int y){
+
+}
+
+void Game::playerConsume(int x, int y){
+
+}
+
+void Game::playerCollect(int x, int y){
+
+}
+
+
+//enemy specific methods
+void Game::enemyRadiusCheck(){
+
+}
+
+
+void Game::enemyMove(int x, int y){
+
 }
 
 ostream &operator<<(ostream &out, const Game &g){
@@ -92,9 +122,9 @@ ostream &operator<<(ostream &out, const Game &g){
 	out << "Race: " << g.player->getRace() << " ";
 	out << "Gold: " << g.player->getGold();
 	out << "             Floor " << g.floorCount << endl;
-	out << "HP: " << g.player->getHp() << endl;
-	out << "Atk: " << g.player->getAtk() << endl;
-	out << "Def: " << g.player->getDef() << endl;
+	out << "HP: " << g.player->getCurInfo().hp << endl;
+	out << "Atk: " << g.player->getCurInfo().atk << endl;
+	out << "Def: " << g.player->getCurInfo().def << endl;
 	out << "Action: " << g.msg << endl;
 
 	return out;
