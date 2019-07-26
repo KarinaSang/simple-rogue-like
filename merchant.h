@@ -5,7 +5,8 @@
 class Merchant : public EnemyDecorator {
 	public: 
 	Merchant(Enemy *enemyComponent);
-
+	
+	void isHostile();
 	void specialAbility() override;
 };
 

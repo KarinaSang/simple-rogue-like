@@ -5,7 +5,7 @@
 
 class BasicEnemy : public Enemy {
 	public:
-	BasicEnemy(int hp, int atk, int def, string race);
+	BasicEnemy(int hp, int atk, int def, int value, bool hostile, string race, string display);
 };
 
 #endif
