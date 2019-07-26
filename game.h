@@ -29,7 +29,7 @@ class Game{
 	bool suitEquipped = false;
 
 	Position player;
-	vector <Position> enemies; //stores the position of generated enemies
+	vector <Position> enemy; //stores the position of generated enemies
 	vector <shared_ptr<Potion>> carriedPotions; //potions not yet used
 
 	
@@ -50,8 +50,8 @@ class Game{
 	//enemy associated functions
 	void enemyRadiusCheck(); //checks for the list of enemies, if there is player around them
   	//if a player is found, then the enemy will attack the player, else the enemy moves
-	void allEnemyMove(int x, int y, Position pos); // loop for all enemies
-	void enemyMove(int x, int y); // moves specific enemy
+	void allEnemyMove(); // loop for all enemies
+	void enemyMove(int x, int y, Position p); // moves specific enemy
 
 	//hoard associated functions
 	void hoardRadiusCheck(); // checks if player is in range of hoard
