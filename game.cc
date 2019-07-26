@@ -91,9 +91,6 @@ int Game::calculateScore(){
 
 //player specific methods
 void Game::playerMove(int x, int y){
-<<<<<<< HEAD
-	
-=======
 	int newX = player.x+x;
 	int newY = player.y+y;
 
@@ -108,9 +105,6 @@ void Game::playerMove(int x, int y){
 		player.x = newX;
 		player.y = newY;
 	}
-
-
->>>>>>> db215706584bf6bf396af1db2177fbcb9bbf0a67
 }
 
 
@@ -129,12 +123,37 @@ void Game::playerCollect(int x, int y){
 
 //enemy specific methods
 void Game::enemyRadiusCheck(){
-
+	
 }
 
+void Game::allEnemyMove(){
+	Enemy temp;
+	for(auto e : enemy) {
+		temp = grid[e.x+x][e.y+y].getEnemy();
+		if (temp.getDisplay() == "D") continue;
+		while (true) {
+			//TODO: generate number
+			int x;
+			int y;
+			int newX = e.x+x;
+			int newY = e.y+y;
+			if (grid[newX][newY].isWalkable()&& !grid[newX][newY].isFilled()) {
+				enemyMove(newX, newY, e);
+				break;
+			}
+		}
+	}
+}
 
-void Game::enemyMove(int x, int y){
+void Game::enemyMove(int x, int y, Position pos){
+	grid[x][y].addEnemy(grid[pos.x][pos.y].getEnemy());
+	grid[pos.x][pos.y].removeEnemy();
+	pos.x = x;
+  pos.y = y;
+}
 
+void Game::hoardRadiusCheck() {
+	
 }
 
 ostream &operator<<(ostream &out, const Game &g){
