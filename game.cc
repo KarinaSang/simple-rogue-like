@@ -88,7 +88,7 @@ int Game::calculateScore(){
 
 //player specific methods
 void Game::playerMove(int x, int y){
-
+	
 }
 
 
