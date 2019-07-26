@@ -50,8 +50,11 @@ class Game{
 	//enemy associated functions
 	void enemyRadiusCheck(); //checks for the list of enemies, if there is player around them
   	//if a player is found, then the enemy will attack the player, else the enemy moves
-	void enemyMove(int x, int y);
+	void allEnemyMove(int x, int y, Position pos); // loop for all enemies
+	void enemyMove(int x, int y); // moves specific enemy
 
+	//hoard associated functions
+	void hoardRadiusCheck(); // checks if player is in range of hoard
 
 
 	friend ostream &operator << (ostream &out, Game &g); 
