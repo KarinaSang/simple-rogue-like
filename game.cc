@@ -164,10 +164,10 @@ void Game::enemyRadiusCheck(){
 }
 
 void Game::allEnemyMove(){
-	Enemy temp;
+	shared_ptr <Enemy> temp;
 	for(auto e : enemy) {
-		temp = grid[e.x+x][e.y+y].getEnemy();
-		if (temp.getDisplay() == "D") continue;
+		temp = grid[e.x][e.y].getEnemy();
+		if (temp->getDisplay() == 'D') continue;
 		while (true) {
 			//TODO: generate number
 			int x;
