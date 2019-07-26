@@ -2,54 +2,45 @@
 #define PLAYER_H
 #include <string>
 #include <vector>
-#include "object.h"
+#include <memory>
 #include "potion.h"
+#include "characterinfo.h"
 
 using namespace std;
 
-class Enemy;
-
-class Player : public Object{
-	//basic player info
-	int hp;
-	int maxhp;
-	int atk;
-	int def;
+class Player{
 	string race;
 	int gold = 0; //default to have zero gold
 	char display = '@'; //letter representing the player
 
-	string msg = ""; //for displaying the current action
-
 	//items
 	bool suitEquipped = false;
 	bool compassEquipped = false; //DO WE NEED THIS?
-	vector <Potion> tempPotion; //list of potions used for the current floor
+
+	protected:
+	CharacterInfo curInfo;
+	CharacterInfo defaultInfo;
 
 	public:
-	Player(int hp = 140, int maxhp = 140, int atk = 20, int def = 20, string race = "human");
+	Player(int hp = 140, int atk = 20, int def = 20, string race = "human");
 
 	//getter methods
-	int getHp() {return hp;}
-	int getAtk() {return atk;}
-	int getDef() {return def;}
-	int getMaxhp() {return maxhp;}
+	CharacterInfo getCurInfo(){return curInfo;}
+	CharacterInfo getDefaultInfo() {return defaultInfo;}
 	string getRace() {return race;}
 	bool hasSuit() {return suitEquipped;}
 	virtual int getGold(){return gold;}
 
 	//setter methods
-	void addHp(int n) {hp += n;}
-	void addAtk(int n) {atk += n;}
-	void addDef(int n) {def += n;}
-	void addGold(int n) {gold += n;}
+	void addHp(int n){curInfo.hp += n;}
+	void addAtk(int n){curInfo.atk += n;}
+	void addDef(int n){curInfo.def += n;}
+	void addGold(int n){gold += n;}
 	void suitToggle(){(suitEquipped)? suitEquipped=false : suitEquipped=true;}
 
-	bool isDead(){return (hp == 0);}
-	void removeAllPotion(); //removes effects of all temporary potions
-	void move(int x, int y); // moves x blocks right, y blocks down
-	void attack(Enemy &e); //attacks an enemy
-	virtual void addPotion(Potion &p);
+	bool isDead(){return (curInfo.hp == 0);}
+	void resetPlayer(); //removes effects of all temporary potions
+	virtual void usePotion(shared_ptr <Potion>);
 };
 
 

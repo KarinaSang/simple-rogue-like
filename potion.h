@@ -1,13 +1,11 @@
 #ifndef POTION_H
 #define POTION_H
 #include <string>
-#include "object.h"
+#include "characterinfo.h"
 
 using namespace std;
 
-class Player;
-
-class Potion : public Object{
+class Potion{
 	int hp = 0;
 	int atk = 0;
 	int def = 0;
@@ -24,8 +22,6 @@ class Potion : public Object{
 	void setAtk(int n);
 	void setDef(int n);
 	void setEffect(bool e){effect = e;}
-
-	void applyPotion(Player&);
 
 	string potionInfo();
 

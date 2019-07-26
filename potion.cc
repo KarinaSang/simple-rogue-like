@@ -1,5 +1,4 @@
 #include "potion.h"
-#include "player.h"
 
 using namespace std;
 
@@ -22,10 +21,6 @@ void Potion::setDef(int n){
 		this->def = n;
 	else
 		this->def = -1*n;
-}
-
-void Potion::applyPotion(Player &player){
-	player.addPotion(*this);	
 }
 
 string Potion::potionInfo(){
