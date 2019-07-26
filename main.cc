@@ -71,7 +71,9 @@ int main(int argc, char *argv[]){
 		}	
 		else{
 			//move the player
-		}			
+		}
+
+		//check list of enemies		
 	}	
 }
 

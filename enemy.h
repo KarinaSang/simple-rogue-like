@@ -27,6 +27,7 @@ class Enemy{
  	int getAtk() {return info.atk;}
   	int getDef() {return info.def;}
 	string getRace() {return race;}
+	char getDisplay(){return display;}
 	bool isHostile(){return hostile;}
 	bool isDead(){return info.hp == 0;}
 
