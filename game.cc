@@ -94,13 +94,20 @@ void Game::playerMove(int x, int y){
 	int newX = player.x+x;
 	int newY = player.y+y;
 
+	//if the player will be moving to stairs
 	if(grid[newX][newY].isStairs()){
 		nextFloor();
 		return;
 	}
 
+	//if the player will be walking over gold
+	if(grid[newX][newY].getTreasure() != nullptr){
+		playerCollect(x, y);
+		return;
+	}
+
 	if(grid[newX][newY].isWalkable() && !grid[newX][newY].isFilled()){
-		grid[newX][newY].addPlayer(grid[player.x][player.x].getPlayer());
+		grid[newX][newY].addPlayer(grid[player.x][player.y].getPlayer());
 		grid[player.x][player.y].removePlayer();
 		player.x = newX;
 		player.y = newY;
@@ -110,16 +117,46 @@ void Game::playerMove(int x, int y){
 }
 
 
+
+
 void Game::playerAttack(int x, int y){
 
 }
 
+
+
+
 void Game::playerConsume(int x, int y){
-	
+	//if targeted cell has a potion
+	shared_ptr <Potion> temp = grid[player.x+x][player.y+y].getPotion();
+	if(temp != nullptr){
+		grid[player.x][player.y].getPlayer()->usePotion(temp);
+		msg = "You just consumed a " + temp->potionInfo();
+	}
+	else{
+		cerr << "Invalid Move!" << endl;
+		//could throw an exception
+	}	
 }
 
-void Game::playerCollect(int x, int y){
 
+
+void Game::playerCollect(int x, int y){
+	shared_ptr<Treasure> temp = grid[player.x+x][player.y+y].getTreasure();
+	if(temp != nullptr && temp->isCollectable()){
+		grid[player.x][player.y].getPlayer()->collect(temp);
+		
+		msg = "You have acquired " + to_string(temp->getValue()) + " gold!";
+
+		//move the player to where the gold is
+		grid[player.x+x][player.y+y].removeTreasure();
+		this->playerMove(x, y);
+	}
+	else{
+		msg = "*Dragon Hoard* is not collectable at the moment";
+		//could throw an exception
+		cerr << "Invalid Move!" << endl;
+	}
 }
 
 
@@ -133,16 +170,18 @@ void Game::enemyMove(int x, int y){
 
 }
 
-ostream &operator<<(ostream &out, const Game &g){
+ostream &operator<<(ostream &out, Game &g){
 	out << *(g.td);
 
+	shared_ptr <Player> temp = g.grid[g.player.x][g.player.y].getPlayer();
+
 	//add the 5 lines displaying relevant info
-	out << "Race: " << g.player->getRace() << " ";
-	out << "Gold: " << g.player->getGold();
+	out << "Race: " << temp->getRace() << " ";
+	out << "Gold: " << temp->getGold();
 	out << "             Floor " << g.floorCount << endl;
-	out << "HP: " << g.player->getCurInfo().hp << endl;
-	out << "Atk: " << g.player->getCurInfo().atk << endl;
-	out << "Def: " << g.player->getCurInfo().def << endl;
+	out << "HP: " << temp->getCurInfo().hp << endl;
+	out << "Atk: " << temp->getCurInfo().atk << endl;
+	out << "Def: " << temp->getCurInfo().def << endl;
 	out << "Action: " << g.msg << endl;
 
 	return out;

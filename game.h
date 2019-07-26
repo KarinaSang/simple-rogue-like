@@ -54,7 +54,7 @@ class Game{
 
 
 
-	friend ostream &operator << (ostream &out, const Game &g); 
+	friend ostream &operator << (ostream &out, Game &g); 
 };
 
 
