@@ -4,6 +4,6 @@ int BasicPlayer::getGold(){
 	return this->getGold(); 
 }
 
-void BasicPlayer::addPotion(Potion &p){
-	Player::addPotion(p);
+void BasicPlayer::usePotion(shared_ptr <Potion> p){
+	Player::usePotion(p);
 }

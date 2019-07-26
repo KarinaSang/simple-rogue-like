@@ -2,7 +2,8 @@
 #include <fstream>
 #include <vector>
 #include <string>
-//other includes
+#include <memory>
+#include "game.h"
 
 using namespace std;
 
@@ -12,9 +13,10 @@ int main(int argc, char *argv[]){
 		return 1;
 	}
 
-	const int BOARDWIDTH = 79;
-	const int BOARDHEIGHT = 30;
-
+	//game essentials
+	Game game;
+	TextDisplay td;
+	Player player;
 
 	//creating gameboard from file
 	
@@ -24,9 +26,7 @@ int main(int argc, char *argv[]){
 	while(getline (myfile, line)){
 
 	}
-
-
-
+	
 
 	string cmd;
 
@@ -34,17 +34,19 @@ int main(int argc, char *argv[]){
 	cin >> cmd;
 
 	if(cmd == "h"){
-
+		player {};
 	}
 	else if(cmd == "e"){
-		
+		player{140, 30, 10};
 	}
 	else if(cmd == "d"){
-
+		player{100, 20, 30};
 	}
 	else if(cmd == "o"){
-
+		player{180, 30, 25};
 	}
+
+	game{make_shared<Player> player};
 
 
 	//command interpreter
