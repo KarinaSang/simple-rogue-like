@@ -3,6 +3,8 @@
 #include "enemyDecorator.h"
 
 class Dragon : public EnemyDecorator {
+	Treasure *hoard; gt
+
 	public:
 	Dragon(Enemy *e);
 

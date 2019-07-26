@@ -2,6 +2,10 @@
 
 Dragon::Dragon(Enemy *e) : EnemyDecorator(e) {}
 
-void Dragon::specialAbility() {}
+void Dragon::specialAbility() {
+	if (hp == 0) {
+		hoard->collectable = true;
+	}
+}
 
 
