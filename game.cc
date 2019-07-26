@@ -23,6 +23,9 @@ void Game::init(){
 				case '@': //player
 					
 					break;
+				case '\\': //stairs
+					//change corresponding cell to stairs
+					break;
 				case 'V': //vampire
 					//create an enemy = new Vampire
 					//grid[i][j].addEnemy(...);
@@ -88,6 +91,21 @@ int Game::calculateScore(){
 
 //player specific methods
 void Game::playerMove(int x, int y){
+	int newX = player.x+x;
+	int newY = player.y+y;
+
+	if(grid[newX][newY].isStairs()){
+		nextFloor();
+		return;
+	}
+
+	if(grid[newX][newY].isWalkable() && !grid[newX][newY].isFilled()){
+		grid[newX][newY].addPlayer(grid[player.x][player.x].getPlayer());
+		grid[player.x][player.y].removePlayer();
+		player.x = newX;
+		player.y = newY;
+	}
+
 
 }
 
@@ -97,7 +115,7 @@ void Game::playerAttack(int x, int y){
 }
 
 void Game::playerConsume(int x, int y){
-
+	
 }
 
 void Game::playerCollect(int x, int y){
