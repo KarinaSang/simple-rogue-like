@@ -10,7 +10,7 @@ class EnemyDecorator : public Enemy {
 	EnemyDecorator(Enemy *enemy);
 	virtual ~EnemyDecorator();
 	
-	virtual specialAbility() = 0;
+	virtual void specialAbility() = 0;
 };
 
 #endif

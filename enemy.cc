@@ -2,5 +2,5 @@
 
 
 bool Enemy::dead() {
-	return hp == 0;
+	return info.hp == 0;
 }
