@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <memory>
 
 using namespace std;
 
@@ -30,14 +31,14 @@ class Game{
 	bool suitEquipped = false;
 	int score = 0;
 
-	Player *player;
-	vector <Enemy> enemies;
-	vector <Potion> tempPotions; //temporary potions collected on a specific floor
+	unique_ptr <Player> player;
+	vector <unique_ptr<Enemy>> enemies;
+	vector <unique_ptr<Potion>> carriedPotions; //potions not yet used
 
 	
 
 	public:
-	Game(Player *);
+	Game(unique_ptr <Player>);
 	~Game();
 	void init();
 	void nextFloor(); //go to next floor
