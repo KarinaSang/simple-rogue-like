@@ -27,6 +27,7 @@ class Game{
 	int potionCount = 0;
 	int treasureCount = 0;
 	bool suitEquipped = false;
+	bool mHostility = false; //merchant hostility towards player
 
 	Position player;
 	vector <Position> enemy; //stores the position of generated enemies

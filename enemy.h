@@ -15,7 +15,6 @@ class Enemy{
 	protected:
 	CharacterInfo info;
 	int value = 1;
-	bool hostile = true;
 	string race;
 	char display;
 
@@ -25,10 +24,10 @@ class Enemy{
 	//getter methods
 	int getHp() {return info.hp;}
  	int getAtk() {return info.atk;}
-  int getDef() {return info.def;}
+	int getDef() {return info.def;}
+	int getValue() {return value;}
 	string getRace() {return race;}
 	char getDisplay(){return display;}
-	bool isHostile(){return hostile;}
 	bool isDead(){return info.hp == 0;}
 
 	//setter methods(might not need to modify enemy's base ratio)
@@ -36,11 +35,11 @@ class Enemy{
 	void addAtk(int n) {info.atk += n;}
 	void addDef(int n) {info.def += n;}
 	void setValue(int n) {value = n;}
-	void toggleHostility(bool state){hostile = state;}
 	void setCompass(){hasCompass = true;}
 
 	virtual void specialAbility(shared_ptr<Player>); //CAN IMPLEMENT stealing health/gold from a player
 	virtual void attack(shared_ptr<Player>);
+	virtual void getTreasure(); //dragon will implement this
 };
 
 
