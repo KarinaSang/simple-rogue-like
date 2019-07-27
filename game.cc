@@ -93,11 +93,26 @@ int Game::calculateScore(){
 	return grid[player.x][player.y].getPlayer()->getGold();
 }
 
-string getDir(string dir){
-	if(dir == "ea"){
+string Game::getDir(string dir){
+	if(dir == "no")
+		return "North";
+	else if(dir == "so")
+		return "South";
+	else if(dir == "ea")
 		return "East";
-	}
-	//...
+	else if(dir == "we")
+		return "West";
+	else if(dir == "ne")
+		return "North East";
+	else if(dir == "nw")
+		return "North West";
+	else if(dir == "se")
+		return "South East";
+	else if(dir == "sw")
+		return "South West";
+
+	//direction is undefined, could throw an exception
+	return "";
 }
 
 
