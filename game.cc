@@ -30,32 +30,53 @@ void Game::init(){
 					//create an enemy = new Vampire
 					//grid[i][j].addEnemy(...);
 					//enemies.emplace_back(...); //push it to the list of enemies in game
+					shared_ptr<Enemy> v = make_shared<BasicEnemy>{50, 25, 25};
+					grid[i][j].addEnemy(v);
+					enemy.emplace_back(Position p {i,j});
 					break;
 				case 'W': //werewolf
 					//create an enemy = new Werewolf
 					//grid[i][j].addEnemy(...);
 					//enemies.emplace_back(...); //push it to the list of enemies in game
+					shared_ptr<Enemy> w = make_shared<BasicEnemy>{120, 30, 5};
+					grid[i][j].addEnemy(w);
+					enemy.emplace_back(Position p {i,j});
 					break;
 
 				case 'N': //goblin
 					//create an enemy = new Goblin
 					//grid[i][j].addEnemy(...);
 					//enemies.emplace_back(...); //push it to the list of enemies in game
+					shared_ptr<Enemy> n = make_shared<BasicEnemy>{70, 5, 10};
+					grid[i][j].addEnemy(n);
+					enemy.emplace_back(Position p {i,j});
 					break;
 				case 'X': //Phoenix
 					//create an enemy = new Phoenix
 					//grid[i][j].addEnemy(...);
 					//enemies.emplace_back(...); //push it to the list of enemies in game
+					shared_ptr<Enemy> x = make_shared<BasicEnemy>{50, 35, 20};
+					grid[i][j].addEnemy(x);
+					enemy.emplace_back(Position p {i,j});
 					break;
 				case 'T': //troll
 					//create an enemy = new Troll
 					//grid[i][j].addEnemy(...);
 					//enemies.emplace_back(...); //push it to the list of enemies in game
+					shared_ptr<Enemy> t = make_shared<BasicEnemy>{120, 25, 15};
+					grid[i][j].addEnemy(t);
+					enemy.emplace_back(Position p {i,j});
 					break;
 				case 'M': //merchant
+					shared_ptr<Enemy> m = make_shared<Merchant>();
+					grid[i][j].addEnemy(m);
+					enemy.emplace_back(Position p {i,j});
 					break;
 				case 'D': //dragon
 					//search for position of dragon hoard
+			  	shared_ptr<Enemy> d = make_shared<Dragon>();
+					grid[i][j].addEnemy(d);
+					enemy.emplace_back(Position p {i,j});
 					break;
 				case 'P': //potion
 					//do potion generation
