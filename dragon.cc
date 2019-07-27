@@ -1,10 +1,12 @@
 #include "dragon.h"
 
 Dragon::Dragon(shared_ptr <Cell> t) : treasure{t} {
-	//set base ratio for dragon
-	//...
+	info.hp = 150;
+	info.atk = 20;
+	info.def = 20;
+	race = "Dragon";
+	display = 'D';
 	value = 0;
-	hostile = false;	
 }
 
 

@@ -140,6 +140,10 @@ void Game::playerMove(int x, int y, string dir){
 		
 	}
 
+	//update player position in game
+	player.x = newX;
+	player.y = newY;
+
 	//modifies display
 	td->setChar(player.x, player.y, grid[player.x][player.y].getDisplay());
 	td->setChar(newX, newY, '@');
@@ -150,15 +154,62 @@ void Game::playerMove(int x, int y, string dir){
 
 
 void Game::playerAttack(int x, int y){
+	shared_ptr <Enemy> temp = grid[player.x+x][player.y+y].getEnemy();
+	shared_ptr <Player> p = grid[player.x][player.y].getPlayer();
 
+	//if target cell has an enemy
+	if(temp != nullptr){
+		int damage = ceil((100/(100+temp->getDef()))*p->getCurInfo().atk);
+		temp->addHp(-1*damage); //player deals dmg to enemy
+		msg = "You dealt " + to_string(damage) + " damage to an adorable " + temp->getRace(); //update game msg
+
+		//check if enemy is dead and remove it from the game board
+		if(temp->isDead()){ //three cases, dragon, merchant, other enemies
+			msg += " and you KILLED it!";
+			td->setChar(player.x+x, player.y+y, '.'); //removes enemy from the display
+
+			if(temp->getRace() == "Dragon"){
+				
+				//the dragon hoard is now collectable
+				temp->getTreasure()->setCollectable();
+
+			}
+			else if(temp->getRace() == "Merchant"){
+				
+				if(mHostility == false){ //if player kills merchant for the first time
+					mHostility = true;
+					msg += " You have lost the trust from merchants. All merchants will be hostile to you from now on."; //set msg
+				}
+
+				shared_ptr <Treasure> tempT {new Treasure {temp->getValue(), true}}; //the merchant hoard
+				grid[player.x+x][player.y+y].addTreasure(tempT);//drops a merchant hoard
+			
+				td->setChar(player.x+x, player.y+y, 'G'); //set textdisplay to 'G'
+
+			}
+			else{ //all other enemies
+
+			}
+
+			grid[player.x+x][player.y+y].removeEnemy();
+
+
+		}
+	}
+	else{
+		cerr << "Invalid Move" << endl;
+		//could throw an exception
+	}
+			
 }
 
 
 
 
 void Game::playerConsume(int x, int y){
-	//if targeted cell has a potion
 	shared_ptr <Potion> temp = grid[player.x+x][player.y+y].getPotion();
+
+	//if target cell has a potion
 	if(temp != nullptr){
 		grid[player.x][player.y].getPlayer()->usePotion(temp);
 		msg = "You just consumed a " + temp->potionInfo();
