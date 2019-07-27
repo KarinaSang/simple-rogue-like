@@ -57,7 +57,7 @@ class Game{
 	void enemyMove(int x, int y, Position p); // moves specific enemy
 
 	//hoard associated functions
-	bool hoardRadiusCheck(shared_ptr<Enemy> d); // checks if player is in range of hoard
+	bool radiusHoardCheck(shared_ptr<Enemy> d); // checks if player is in range of hoard
 
 
 	friend ostream &operator << (ostream &out, Game &g); 

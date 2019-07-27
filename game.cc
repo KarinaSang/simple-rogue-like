@@ -1,4 +1,8 @@
 #include "game.h"
+#include "enemy.h"
+#include "basicenemy.h"
+#include "dragon.h"
+#include "merchant.h"
 
 Game::Game() {}
 
@@ -17,7 +21,9 @@ void Game::init(){
 				case '-':
 				case '+':
 				case '#':
-				case '.':{
+				case '.':
+				case '9':
+				case 'B':{
 						break;
 					 }
 				case '@': //player
@@ -26,58 +32,62 @@ void Game::init(){
 				case '\\': //stairs
 					//change corresponding cell to stairs
 					break;
-				case 'V': //vampire
-					//create an enemy = new Vampire
-					//grid[i][j].addEnemy(...);
-					//enemies.emplace_back(...); //push it to the list of enemies in game
-					shared_ptr<Enemy> v = make_shared<BasicEnemy>{50, 25, 25};
+				case 'V':{ //vampire
+					shared_ptr<Enemy> v = make_shared<BasicEnemy>(50, 25, 25, "Vampire", 'V');
 					grid[i][j].addEnemy(v);
-					enemy.emplace_back(Position p {i,j});
+					enemy.emplace_back(Position {i,j});
 					break;
-				case 'W': //werewolf
-					//create an enemy = new Werewolf
-					//grid[i][j].addEnemy(...);
-					//enemies.emplace_back(...); //push it to the list of enemies in game
-					shared_ptr<Enemy> w = make_shared<BasicEnemy>{120, 30, 5};
+				}
+				case 'W':{ //werewolf
+					shared_ptr<Enemy> w = make_shared<BasicEnemy>(120, 30, 5, "Werewolf", 'W');
 					grid[i][j].addEnemy(w);
-					enemy.emplace_back(Position p {i,j});
+					enemy.emplace_back(Position {i,j});
 					break;
-
-				case 'N': //goblin
-					//create an enemy = new Goblin
-					//grid[i][j].addEnemy(...);
-					//enemies.emplace_back(...); //push it to the list of enemies in game
-					shared_ptr<Enemy> n = make_shared<BasicEnemy>{70, 5, 10};
+				}
+				case 'N':{ //goblin
+					shared_ptr<Enemy> n = make_shared<BasicEnemy>(70, 5, 10, "Globlin", 'N');
 					grid[i][j].addEnemy(n);
-					enemy.emplace_back(Position p {i,j});
+					enemy.emplace_back(Position {i,j});
 					break;
-				case 'X': //Phoenix
-					//create an enemy = new Phoenix
-					//grid[i][j].addEnemy(...);
-					//enemies.emplace_back(...); //push it to the list of enemies in game
-					shared_ptr<Enemy> x = make_shared<BasicEnemy>{50, 35, 20};
+				}
+				case 'X':{ //Phoenix
+					shared_ptr<Enemy> x = make_shared<BasicEnemy>(50, 35, 20, "Phoenix", 'X');
 					grid[i][j].addEnemy(x);
-					enemy.emplace_back(Position p {i,j});
+					enemy.emplace_back(Position {i,j});
 					break;
-				case 'T': //troll
-					//create an enemy = new Troll
-					//grid[i][j].addEnemy(...);
-					//enemies.emplace_back(...); //push it to the list of enemies in game
-					shared_ptr<Enemy> t = make_shared<BasicEnemy>{120, 25, 15};
+				}
+				case 'T':{ //troll
+					shared_ptr<Enemy> t = make_shared<BasicEnemy>(120, 25, 15, "Troll", 'T');
 					grid[i][j].addEnemy(t);
-					enemy.emplace_back(Position p {i,j});
+					enemy.emplace_back(Position {i,j});
 					break;
-				case 'M': //merchant
+				}
+				case 'M':{ //merchant
 					shared_ptr<Enemy> m = make_shared<Merchant>();
 					grid[i][j].addEnemy(m);
-					enemy.emplace_back(Position p {i,j});
+					enemy.emplace_back(Position {i,j});
 					break;
-				case 'D': //dragon
+				}
+				case 'D':{ //dragon
 					//search for position of dragon hoard
-			  	shared_ptr<Enemy> d = make_shared<Dragon>();
-					grid[i][j].addEnemy(d);
-					enemy.emplace_back(Position p {i,j});
-					break;
+					for(int a = -1; a <= 1; a++){
+						for(int b = -1; b <= 1; b++){
+							if(td->getChar(i+a, j+b) == '9'){ //found dragon hoard
+								shared_ptr <Treasure> t = make_shared<Treasure> (6, false); //dragon hoard
+								grid[i+a][j+b].addTreasure(t); //add treasure to cell
+								td->setChar(i+a, j+b, 'G'); //set textdisplay back to G
+								shared_ptr<Enemy> d = make_shared<Dragon>(make_shared <Cell>(grid[i+a][j+b])); //create dragon guarding dragon hoard
+								grid[i][j].addEnemy(d);
+								enemy.emplace_back(Position {i,j});
+							}
+							else if(td->getChar(i+a, j+b) == 'B'){
+								//TODO: ADD BARRIER SUIT
+							}
+						}
+					}
+
+			  		break;
+				}
 				case 'P': //potion
 					//do potion generation
 					break;
@@ -87,12 +97,7 @@ void Game::init(){
 				case '7': //small hoard
 					//change textdisplay back to G
 					break;
-				case '9': //dragon hoard
-					//change textdisplay back to G
-					break;
 				case 'C': //compass
-					break;
-				case 'B': //barrier suit
 					break;
 			
 			}
@@ -136,15 +141,19 @@ string Game::getDir(string dir){
 	return "";
 }
 
-Position Game::getPost(string dir) {
-	if (dir == "no") return Position pos{-1, 0};
-	if (dir == "so") return Position pos{1, 0};
-	if (dir == "ea") return Position pos{0, 1};
-	if (dir == "we") return Position pos{0, -1};
-	if (dir == "ne") return Position pos{-1, 1};
-	if (dir == "nw") return Position pos{-1, -1};
-	if (dir == "se") return Position pos{1, 1};
-	if (dir == "sw") return Position pos{1, -1};
+Position Game::getPos(string dir) {
+	if (dir == "no") return Position {-1, 0};
+	else if (dir == "so") return Position {1, 0};
+	else if (dir == "ea") return Position {0, 1};
+	else if (dir == "we") return Position {0, -1};
+	else if (dir == "ne") return Position {-1, 1};
+	else if (dir == "nw") return Position {-1, -1};
+	else if (dir == "se") return Position {1, 1};
+	else if (dir == "sw") return Position {1, -1};
+	else {
+		//TODO: COULD THROW AN EXCEPTION
+		return Position {0,0};
+	}
 }
 
 //player specific methods
@@ -310,48 +319,48 @@ void Game::enemyRadiusCheck(){
 		if (check == true) {
 			//check if player is north of enemy
 			if (((e.x+no.x) == player.x) && ((e.y+no.y) == player.y)) {
-				attack(p);
+				temp->attack(p);
 				break;
 			}
 
 			//check if player is south of enemy
 			if (((e.x+so.x) == player.x) && ((e.y+so.y) == player.y)) {
-				attack(p);
+				temp->attack(p);
 				break;
 			}
 
 			//check if player is east of enemy
 			if (((e.x+ea.x) == player.x) && ((e.y+ea.y) == player.y)) {
-				attack(p);
+				temp->attack(p);
 				break;
 			}	
 		
 			//check if player is west of enemy
 			if (((e.x+we.x) == player.x) && ((e.y+we.y) == player.y)) {
-				attack(p);
+				temp->attack(p);
 				break;
 			}
 			//check if player is north east of enemy
 			if (((e.x+ne.x) == player.x) && ((e.y+ne.y) == player.y)) {
-				attack(p);
+				temp->attack(p);
 				break;
 			}
 
 			//check if player is north west of enemy
 			if (((e.x+nw.x) == player.x) && ((e.y+nw.y) == player.y)) {
-				attack(p);
+				temp->attack(p);
 				break;
 			}
 
 			//check if player is south east of enemy
 			if (((e.x+se.x) == player.x) && ((e.y+se.y) == player.y)) {
-				attack(p);
+				temp->attack(p);
 				break;
 			}
 
 			//check if player is south west of enemy
 			if (((e.x+sw.x) == player.x) && ((e.y+sw.y) == player.y)) {
-				attack(p);
+				temp->attack(p);
 				break;
 			}
 		}
@@ -386,7 +395,7 @@ void Game::enemyMove(int x, int y, Position pos){
   pos.y = y;
 }
 
-bool Game::hoardRadiusCheck(shared_ptr<Enemy> d) {
+bool Game::radiusHoardCheck(shared_ptr<Enemy> d) {
 	Position no{-1, 0};
 	Position so{1, 0};   
 	Position ea{0, 1};
@@ -395,8 +404,8 @@ bool Game::hoardRadiusCheck(shared_ptr<Enemy> d) {
 	Position nw{-1, -1};
 	Position se{1, 1};  
 	Position sw{1, -1};
-	int row = temp.getTreasure().getRow();
-	int col = temp.getTreasure().getCol();
+	int row = d->getTreasure()->getRow();
+	int col = d->getTreasure()->getCol();
 	//check if player is north of hoard
 	if (((row+no.x) == player.x) && ((col+no.y) == player.y)) 
 		return true;
