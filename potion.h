@@ -6,12 +6,14 @@
 using namespace std;
 
 class Potion{
-	int hp = 0;
-	int atk = 0;
-	int def = 0;
+	int hp;
+	int atk;
+	int def;
 	bool effect = true; //true for positive, false for negative
 
 	public:
+	Potion(int hp, int atk, int def, bool effect);
+
 	//getter
 	int getHp(){return hp;}
 	int getAtk(){return atk;}

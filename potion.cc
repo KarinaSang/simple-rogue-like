@@ -2,6 +2,9 @@
 
 using namespace std;
 
+Potion::Potion(int hp, int atk, int def, bool effect) :
+	hp{hp}, atk{atk}, def{def}, effect{effect} {}
+
 void Potion::setHp(int n){
 	if(this->effect)
 		this->hp = n;
