@@ -4,7 +4,7 @@
 #include "dragon.h"
 #include "merchant.h"
 
-Game::Game() {}
+Game::Game(shared_ptr <Player> p): curP{p} {}
 
 
 void Game::init(){
@@ -26,12 +26,18 @@ void Game::init(){
 				case 'B':{
 						break;
 					 }
-				case '@': //player
-					
+				case '@':{ //player
+					grid[i][j].addPlayer(curP);
+					player.x = i;
+					player.y = j;	
 					break;
-				case '\\': //stairs
-					//change corresponding cell to stairs
+				}
+				case '\\':{ //stairs
+					stairs.x = i;
+					stairs.y = j;
+					td->setChar(i, j, '.');		
 					break;
+				}
 				case 'V':{ //vampire
 					shared_ptr<Enemy> v = make_shared<BasicEnemy>(50, 25, 25, "Vampire", 'V');
 					grid[i][j].addEnemy(v);
@@ -143,16 +149,24 @@ void Game::init(){
 			}
 		}
 	}
+
+	//generate the enemy that holds the Compass
 	srand(time(nullptr));
-	int n = (rand() % 20); 
+	int n = (rand() % 20);
 	Position pos{enemy[n]};
+
+	while(td->getChar(pos.x, pos.y) == 'D'){
+		n = (rand()%20);
+		pos = enemy[n];
+	}
+
 	grid[pos.x][pos.y].getEnemy()->setCompass();
 }
 
 void Game::nextFloor(){
 	++floorCount;
 
-	//regenerate textdisplay
+	//TODO:regenerate textdisplay
 	//...
 	cin >> *td;
 
@@ -337,7 +351,7 @@ void Game::playerCollect(int x, int y, string dir){
 			msg = "You are now equipped with the Barrier Suit";
 		}
 		else if(temp->isCompass()){
-			td->setChar(compass.x, compass.y, '\\');
+			td->setChar(stairs.x, stairs.y, '\\');
 			msg = "You have acquired a Compass! Stairs to the next floor are now showing.";
 		}
 		else{	
@@ -359,7 +373,7 @@ void Game::playerCollect(int x, int y, string dir){
 
 
 //enemy specific methods
-void Game::enemyRadiusCheck(){
+bool Game::enemyRadiusCheck(Position e){
 	Position no{-1, 0};
 	Position so{1, 0};
 	Position ea{0, 1};
@@ -370,8 +384,8 @@ void Game::enemyRadiusCheck(){
 	Position sw{1, -1};
 	shared_ptr<Player> p = grid[player.x][player.y].getPlayer();
 	shared_ptr <Enemy> temp;
-	for (auto e : enemy) {
-		bool check = true;
+	
+	bool check = true;
 		temp = grid[e.x][e.y].getEnemy();
 		if (temp->getDisplay() == 'D') {
 			if (radiusHoardCheck(temp)) check = true;
@@ -381,58 +395,58 @@ void Game::enemyRadiusCheck(){
 			//check if player is north of enemy
 			if (((e.x+no.x) == player.x) && ((e.y+no.y) == player.y)) {
 				temp->attack(p);
-				break;
+				return true;
 			}
 
 			//check if player is south of enemy
 			if (((e.x+so.x) == player.x) && ((e.y+so.y) == player.y)) {
 				temp->attack(p);
-				break;
+				return true;
 			}
 
 			//check if player is east of enemy
 			if (((e.x+ea.x) == player.x) && ((e.y+ea.y) == player.y)) {
 				temp->attack(p);
-				break;
+				return true;
 			}	
 		
 			//check if player is west of enemy
 			if (((e.x+we.x) == player.x) && ((e.y+we.y) == player.y)) {
 				temp->attack(p);
-				break;
+				return true;
 			}
 			//check if player is north east of enemy
 			if (((e.x+ne.x) == player.x) && ((e.y+ne.y) == player.y)) {
 				temp->attack(p);
-				break;
+				return true;
 			}
 
 			//check if player is north west of enemy
 			if (((e.x+nw.x) == player.x) && ((e.y+nw.y) == player.y)) {
 				temp->attack(p);
-				break;
+				return true;
 			}
 
 			//check if player is south east of enemy
 			if (((e.x+se.x) == player.x) && ((e.y+se.y) == player.y)) {
 				temp->attack(p);
-				break;
+				return true;
 			}
 
 			//check if player is south west of enemy
 			if (((e.x+sw.x) == player.x) && ((e.y+sw.y) == player.y)) {
 				temp->attack(p);
-				break;
+				return true;
 			}
 		}
-	}
+	return false;
 }
 
-void Game::allEnemyMove(){
+void Game::generateEnemyMove(Position e){
 	shared_ptr <Enemy> temp;
-	for(auto e : enemy) {
+
 		temp = grid[e.x][e.y].getEnemy();
-		if (temp->getDisplay() == 'D') continue;
+		if (temp->getDisplay() == 'D') return;
 		while (true) {
 			int x = temp->randNum();
 			int y = temp->randNum();
@@ -451,14 +465,14 @@ void Game::allEnemyMove(){
 				break;
 			}
 		}
-	}
+
 }
 
 void Game::enemyMove(int x, int y, Position pos){
 	grid[x][y].addEnemy(grid[pos.x][pos.y].getEnemy());
 	grid[pos.x][pos.y].removeEnemy();
 	pos.x = x;
-  pos.y = y;
+	pos.y = y;
 }
 
 bool Game::radiusHoardCheck(shared_ptr<Enemy> d) {

@@ -2,7 +2,12 @@
 #define CELL_H
 #include "textdisplay.h"
 #include "player.h"
+#include "basicplayer.h"
+#include "elfdecorator.h"
+#include "orcdecorator.h"
+#include "dwarfdecorator.h"
 #include "enemy.h"
+#include "basicenemy.h"
 #include "potion.h"
 #include "treasure.h"
 #include <vector>

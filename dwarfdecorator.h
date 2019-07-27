@@ -4,6 +4,7 @@
 
 class DwarfDecorator : public PlayerDecorator{
 	public:
+	DwarfDecorator(shared_ptr <Player> p): PlayerDecorator{p}{}
 	void addGold(int) override;
 };
 
