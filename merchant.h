@@ -4,11 +4,8 @@
 #include "cell.h"
 
 class Merchant : public Enemy {
-	shared_ptr <Cell> treasure;
-
 	public: 
-	Merchant(shared_ptr <Cell>);
-	shared_ptr <Cell> getTreasure(){return treasure;}
+	Merchant();
 };
 
 #endif
