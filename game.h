@@ -41,7 +41,7 @@ class Game{
 	void nextFloor(); //go to next floor
 	int calculateScore(); //calculate current score
 	string getDir(string); //returns full name of any direction
-
+	Position getPos(string); // returns position associated with direction
 	//player associated functions
 	void playerMove(int x, int y, string dir);
 	void playerAttack(int x, int y); //attacks something in certain direction
@@ -55,7 +55,7 @@ class Game{
 	void enemyMove(int x, int y, Position p); // moves specific enemy
 
 	//hoard associated functions
-	void hoardRadiusCheck(); // checks if player is in range of hoard
+	bool hoardRadiusCheck(shared_ptr<Enemy> d); // checks if player is in range of hoard
 
 
 	friend ostream &operator << (ostream &out, Game &g); 

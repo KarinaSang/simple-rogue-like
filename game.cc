@@ -100,6 +100,16 @@ string getDir(string dir){
 	//...
 }
 
+Position Game::getPost(string dir) {
+	if (dir == "no") return Position pos{-1, 0};
+	if (dir == "so") return Position pos{1, 0};
+	if (dir == "ea") return Position pos{0, 1};
+	if (dir == "we") return Position pos{0, -1};
+	if (dir == "ne") return Position pos{-1, 1};
+	if (dir == "nw") return Position pos{-1, -1};
+	if (dir == "se") return Position pos{1, 1};
+	if (dir == "sw") return Position pos{1, -1};
+}
 
 //player specific methods
 void Game::playerMove(int x, int y, string dir){
@@ -182,7 +192,72 @@ void Game::playerCollect(int x, int y, string dir){
 
 //enemy specific methods
 void Game::enemyRadiusCheck(){
-	
+	Position no{-1, 0};
+	Position so{1, 0};
+	Position ea{0, 1};
+	Position we{0, -1};
+	Position ne{-1, 1};
+	Position nw{-1, -1};
+	Position se{1, 1};
+	Position sw{1, -1};
+	shared_ptr<Player> p = grid[player.x][player.y].getPlayer();
+	shared_ptr <Enemy> temp;
+	for (auto e : enemy) {
+		bool check = true;
+		temp = grid[e.x][e.y].getEnemy();
+		if (temp->getDisplay() == 'D') {
+			if (radiusHoardCheck(temp)) check = true;
+			else check = false;
+		}
+		if (check == true) {
+			//check if player is north of enemy
+			if (((e.x+no.x) == player.x) && ((e.y+no.y) == player.y)) {
+				attack(p);
+				break;
+			}
+
+			//check if player is south of enemy
+			if (((e.x+so.x) == player.x) && ((e.y+so.y) == player.y)) {
+				attack(p);
+				break;
+			}
+
+			//check if player is east of enemy
+			if (((e.x+ea.x) == player.x) && ((e.y+ea.y) == player.y)) {
+				attack(p);
+				break;
+			}	
+		
+			//check if player is west of enemy
+			if (((e.x+we.x) == player.x) && ((e.y+we.y) == player.y)) {
+				attack(p);
+				break;
+			}
+			//check if player is north east of enemy
+			if (((e.x+ne.x) == player.x) && ((e.y+ne.y) == player.y)) {
+				attack(p);
+				break;
+			}
+
+			//check if player is north west of enemy
+			if (((e.x+nw.x) == player.x) && ((e.y+nw.y) == player.y)) {
+				attack(p);
+				break;
+			}
+
+			//check if player is south east of enemy
+			if (((e.x+se.x) == player.x) && ((e.y+se.y) == player.y)) {
+				attack(p);
+				break;
+			}
+
+			//check if player is south west of enemy
+			if (((e.x+sw.x) == player.x) && ((e.y+sw.y) == player.y)) {
+				attack(p);
+				break;
+			}
+		}
+	}
 }
 
 void Game::allEnemyMove(){
@@ -198,6 +273,8 @@ void Game::allEnemyMove(){
 			int newY = e.y+y;
 			if (grid[newX][newY].isWalkable()&& !grid[newX][newY].isFilled()) {
 				enemyMove(newX, newY, e);
+				e.x = newX;
+				e.y = newY;
 				break;
 			}
 		}
@@ -211,8 +288,42 @@ void Game::enemyMove(int x, int y, Position pos){
   pos.y = y;
 }
 
-void Game::hoardRadiusCheck() {
-	
+bool Game::hoardRadiusCheck(shared_ptr<Enemy> d) {
+	Position no{-1, 0};
+	Position so{1, 0};   
+	Position ea{0, 1};
+	Position we{0, -1};
+	Position ne{-1, 1};
+	Position nw{-1, -1};
+	Position se{1, 1};  
+	Position sw{1, -1};
+	int row = temp.getTreasure().getRow();
+	int col = temp.getTreasure().getCol();
+	//check if player is north of hoard
+	if (((row+no.x) == player.x) && ((col+no.y) == player.y)) 
+		return true;
+	//check if player is south of hoard
+	if (((row+so.x) == player.x) && ((col+so.y) == player.y)) 
+		return true;
+	//check if player is east of hoard
+	if (((row+ea.x) == player.x) && ((col+ea.y) == player.y))
+		return true;
+	//check if player is west of hoard
+	if (((row+we.x) == player.x) && ((col+we.y) == player.y))
+		return true;
+	//check if player is north east of hoard
+	if (((row+ne.x) == player.x) && ((col+ne.y) == player.y))
+		return true;
+	//check if player is north west of hoard
+	if (((row+nw.x) == player.x) && ((col+nw.y) == player.y)) 
+		return true;
+	//check if player is south east of hoard
+	if (((row+se.x) == player.x) && ((col+se.y) == player.y)) 
+		return true;
+	//check if player is south west of hoard
+	if (((row+sw.x) == player.x) && ((col+sw.y) == player.y)) 
+		return true;
+	return false;
 }
 
 ostream &operator<<(ostream &out, Game &g){
