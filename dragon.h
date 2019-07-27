@@ -10,7 +10,7 @@ class Dragon : public Enemy {
 
 	public:
 	Dragon(shared_ptr <Cell> treasure);
-	shared_ptr<Cell> getTreasure(){return treasure;}
+	shared_ptr<Cell> getTreasure() override{return treasure;}
 };
 
 #endif

@@ -30,6 +30,7 @@ class Game{
 	bool mHostility = false; //merchant hostility towards player
 
 	Position player;
+	Position compass; //position of the compass
 	vector <Position> enemy; //stores the position of generated enemies
 	vector <shared_ptr<Potion>> carriedPotions; //potions not yet used
 

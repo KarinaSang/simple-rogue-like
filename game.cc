@@ -171,8 +171,13 @@ void Game::playerAttack(int x, int y){
 			if(temp->getRace() == "Dragon"){
 				
 				//the dragon hoard is now collectable
-				temp->getTreasure()->setCollectable();
+				temp->getTreasure()->getTreasure()->setCollectable();
+				msg += " The dragon hoard is now collectable!";
 
+				if(temp->getCompass()){
+						msg+= " You picked up a Compass too!";
+						td->setChar(compass.x, compass.y, '\\');
+				}
 			}
 			else if(temp->getRace() == "Merchant"){
 				
@@ -181,19 +186,25 @@ void Game::playerAttack(int x, int y){
 					msg += " You have lost the trust from merchants. All merchants will be hostile to you from now on."; //set msg
 				}
 
-				shared_ptr <Treasure> tempT {new Treasure {temp->getValue(), true}}; //the merchant hoard
+				shared_ptr <Treasure> tempT = make_shared <Treasure> (temp->getValue(), true); //the merchant hoard
 				grid[player.x+x][player.y+y].addTreasure(tempT);//drops a merchant hoard
 			
 				td->setChar(player.x+x, player.y+y, 'G'); //set textdisplay to 'G'
 
 			}
 			else{ //all other enemies
+				msg += " You gained 1 gold~";
+				p->addGold(temp->getValue());
 
+				//check if enemy has the compass
+				if(temp->getCompass()){
+					msg += " You picked up a Compass!";
+				
+					td->setChar(compass.x, compass.y, '\\');//displays the stairs	
+				}	
 			}
 
 			grid[player.x+x][player.y+y].removeEnemy();
-
-
 		}
 	}
 	else{
