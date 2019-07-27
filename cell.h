@@ -30,6 +30,8 @@ class Cell{
 	shared_ptr<Enemy> getEnemy(){return enemy;}
 	shared_ptr<Potion> getPotion(){return potion;}
 	shared_ptr<Treasure> getTreasure (){return treasure;}
+	int getRow() { return row;}
+	int getCol() { return col;}
 	char getDisplay(){return display;}
 
 	//setter
