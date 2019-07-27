@@ -96,19 +96,50 @@ void Game::init(){
 
 			  		break;
 				}
-				case 'P': //potion
-					//do potion generation
+				case '0':{ 
+					shared_ptr<Potion> rh = make_shared<Potion>(10, 0, 0, true);
+					grid[i][j].addPotion(p);
 					break;
-				case '6': //normal gold
+				}
+				case '1': {
+					shared_ptr<Potion> ba = make_shared<Potion>(0, 5, 0, true);
+					grid[i][j].addPotion(p);
+					break;
+				}
+				case '2': {
+					shared_ptr<Potion> bd = make_shared<Potion>(0, 0, 5, true);
+					grid[i][j].addPotion(p);
+					break;
+				}
+				case '3': {
+					shared_ptr<Potion> ph = make_shared<Potion>(10, 0, 0, false);
+					grid[i][j].addPotion(ph);
+					break;
+				}
+				case '4': {
+					shared_ptr<Potion> wa = make_shared<Potion>(0, 5, 0, false);
+					grid[i][j].addPotion(wa);
+					break;
+				}
+				case '5': {
+					shared_ptr<Potion> wd = make_shared<Potion>(0, 0, 5, false);
+					grid[i][j].addPotion(wd);
+					break;
+				}
+				case '6': {//normal gold
 					//change textdisplay back to G
+					shared_ptr<Treasure> tr = make_shared<Treasure>(1, true);
+					grid[i][j].addTreasure(tr);
+					td->setChar(i, j, 'G');
 					break;
-				case '7': //small hoard
+				}
+				case '7': {//small hoard
 					//change textdisplay back to G
+					shared_ptr<Treasure> tr2 = make_shared<Treasure>(2, true);
+					grid[i][j].addTreasure(tr2);
+					td->setChar(i, j, 'G');
 					break;
-				case 'C':{ //compass
-					
-					break;
-			
+				}
 			}
 		}
 	}
