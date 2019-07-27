@@ -413,9 +413,13 @@ void Game::allEnemyMove(){
 		temp = grid[e.x][e.y].getEnemy();
 		if (temp->getDisplay() == 'D') continue;
 		while (true) {
-			//TODO: generate number
-			int x;
-			int y;
+			int x = temp->randNum();
+			if (x == 0) {
+			int y = temp->randNum();
+				while (y == 0) {
+			  	y = temp->randNum();
+				}
+			}
 			int newX = e.x+x;
 			int newY = e.y+y;
 			if (grid[newX][newY].isWalkable()&& !grid[newX][newY].isFilled()) {
