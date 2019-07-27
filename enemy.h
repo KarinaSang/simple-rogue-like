@@ -41,7 +41,7 @@ class Enemy{
 	void setCompass(){hasCompass = true;}
 
 	virtual void specialAbility(shared_ptr<Player>); //CAN IMPLEMENT stealing health/gold from a player
-	virtual void attack(shared_ptr<Player>);
+	virtual int attack(shared_ptr<Player>);
 	virtual shared_ptr <Cell> getTreasure(); //dragon will implement this
 };
 
