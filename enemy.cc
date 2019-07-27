@@ -22,3 +22,10 @@ int Enemy::attack(shared_ptr <Player> p){
 	return 0;
 }
 
+int Enemy::randNum() {
+	srand(time(nullptr));
+	int n = (rand() % 3);
+	if (n == 0) return -1;
+	if (n == 1) return 0;
+	return 1;
+}

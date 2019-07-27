@@ -3,6 +3,7 @@
 #include <string>
 #include <memory>
 #include <cmath>
+#include <ctime>
 #include "characterinfo.h"
 
 
@@ -40,6 +41,7 @@ class Enemy{
 	void setValue(int n) {value = n;}
 	void setCompass(){hasCompass = true;}
 
+	int randNum();
 	virtual void specialAbility(shared_ptr<Player>); //CAN IMPLEMENT stealing health/gold from a player
 	virtual int attack(shared_ptr<Player>);
 	virtual shared_ptr <Cell> getTreasure(); //dragon will implement this
