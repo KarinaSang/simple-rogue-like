@@ -98,17 +98,17 @@ void Game::init(){
 				}
 				case '0':{ 
 					shared_ptr<Potion> rh = make_shared<Potion>(10, 0, 0, true);
-					grid[i][j].addPotion(p);
+					grid[i][j].addPotion(rh);
 					break;
 				}
 				case '1': {
 					shared_ptr<Potion> ba = make_shared<Potion>(0, 5, 0, true);
-					grid[i][j].addPotion(p);
+					grid[i][j].addPotion(ba);
 					break;
 				}
 				case '2': {
 					shared_ptr<Potion> bd = make_shared<Potion>(0, 0, 5, true);
-					grid[i][j].addPotion(p);
+					grid[i][j].addPotion(bd);
 					break;
 				}
 				case '3': {
