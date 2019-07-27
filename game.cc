@@ -143,6 +143,10 @@ void Game::init(){
 			}
 		}
 	}
+	srand(time(nullptr));
+	int n = (rand() % 20); 
+	Position pos{enemy[n]};
+	grid[pos.x][pos.y].getEnemy()->setCompass();
 }
 
 void Game::nextFloor(){
