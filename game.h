@@ -30,6 +30,7 @@ class Game{
 	bool mHostility = false; //merchant hostility towards player
 
 	Position player;
+	Position compass; //position of the compass
 	vector <Position> enemy; //stores the position of generated enemies
 	vector <shared_ptr<Potion>> carriedPotions; //potions not yet used
 
@@ -56,7 +57,7 @@ class Game{
 	void enemyMove(int x, int y, Position p); // moves specific enemy
 
 	//hoard associated functions
-	bool hoardRadiusCheck(shared_ptr<Enemy> d); // checks if player is in range of hoard
+	bool radiusHoardCheck(shared_ptr<Enemy> d); // checks if player is in range of hoard
 
 
 	friend ostream &operator << (ostream &out, Game &g); 

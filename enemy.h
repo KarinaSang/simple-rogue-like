@@ -5,9 +5,11 @@
 #include <cmath>
 #include "characterinfo.h"
 
+
 using namespace std;
 
 class Player;
+class Cell;
 
 class Enemy{
 	bool hasCompass = false;
@@ -28,6 +30,7 @@ class Enemy{
 	int getValue() {return value;}
 	string getRace() {return race;}
 	char getDisplay(){return display;}
+	bool getCompass() {return hasCompass;}
 	bool isDead(){return info.hp == 0;}
 
 	//setter methods(might not need to modify enemy's base ratio)
@@ -39,7 +42,7 @@ class Enemy{
 
 	virtual void specialAbility(shared_ptr<Player>); //CAN IMPLEMENT stealing health/gold from a player
 	virtual void attack(shared_ptr<Player>);
-	virtual void getTreasure(); //dragon will implement this
+	virtual shared_ptr <Cell> getTreasure(); //dragon will implement this
 };
 
 
