@@ -5,6 +5,7 @@
 
 class ElfDecorator : public PlayerDecorator{
 	public:
+	ElfDecorator(shared_ptr<Player>p) : PlayerDecorator{p}{}
 	void usePotion(shared_ptr <Potion>) override; //negative potions have positive effect
 };
 
