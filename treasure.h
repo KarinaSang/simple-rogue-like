@@ -12,6 +12,7 @@ class Treasure{
 	int getValue(){return value;}
 	bool isCollectable(){return collectable;}
 
+
 	//setter
 	void setCollectable(){collectable = true;}
 };
