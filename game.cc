@@ -30,7 +30,8 @@ void Game::init(){
 					//create an enemy = new Vampire
 					//grid[i][j].addEnemy(...);
 					//enemies.emplace_back(...); //push it to the list of enemies in game
-					break;
+				shared_ptr<Enemy> v = make_shared<BasicEnemy>{}
+				break;
 				case 'W': //werewolf
 					//create an enemy = new Werewolf
 					//grid[i][j].addEnemy(...);
