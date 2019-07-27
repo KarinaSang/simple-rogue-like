@@ -81,6 +81,11 @@ void Game::init(){
 
 void Game::nextFloor(){
 	++floorCount;
+
+	//regenerate textdisplay
+	//...
+	cin >> *td;
+
 	this->init();
 }
 
@@ -88,30 +93,42 @@ int Game::calculateScore(){
 	return grid[player.x][player.y].getPlayer()->getGold();
 }
 
+string getDir(string dir){
+	if(dir == "ea"){
+		return "East";
+	}
+	//...
+}
+
 
 //player specific methods
-void Game::playerMove(int x, int y){
+void Game::playerMove(int x, int y, string dir){
 	int newX = player.x+x;
 	int newY = player.y+y;
 
 	//if the player will be moving to stairs
 	if(grid[newX][newY].isStairs()){
 		nextFloor();
+		msg = "You have entered Floor " + floorCount;
 		return;
 	}
 
 	//if the player will be walking over gold
 	if(grid[newX][newY].getTreasure() != nullptr){
-		playerCollect(x, y);
-		return;
+		playerCollect(x, y, dir);
 	}
 
-	if(grid[newX][newY].isWalkable() && !grid[newX][newY].isFilled()){
+	else if(grid[newX][newY].isWalkable() && !grid[newX][newY].isFilled()){
 		grid[newX][newY].addPlayer(grid[player.x][player.y].getPlayer());
 		grid[player.x][player.y].removePlayer();
-		player.x = newX;
-		player.y = newY;
+		msg = "You moved " + getDir(dir);
+		
 	}
+
+	//modifies display
+	td->setChar(player.x, player.y, grid[player.x][player.y].getDisplay());
+	td->setChar(newX, newY, '@');
+
 }
 
 
@@ -130,6 +147,11 @@ void Game::playerConsume(int x, int y){
 	if(temp != nullptr){
 		grid[player.x][player.y].getPlayer()->usePotion(temp);
 		msg = "You just consumed a " + temp->potionInfo();
+
+		//modifies display
+		td->setChar(player.x, player.y, grid[player.x][player.y].getDisplay());
+		td->setChar(player.x+x, player.y+y, '@');
+
 	}
 	else{
 		cerr << "Invalid Move!" << endl;
@@ -139,7 +161,7 @@ void Game::playerConsume(int x, int y){
 
 
 
-void Game::playerCollect(int x, int y){
+void Game::playerCollect(int x, int y, string dir){
 	shared_ptr<Treasure> temp = grid[player.x+x][player.y+y].getTreasure();
 	if(temp != nullptr && temp->isCollectable()){
 		grid[player.x][player.y].getPlayer()->collect(temp);
@@ -148,7 +170,7 @@ void Game::playerCollect(int x, int y){
 
 		//move the player to where the gold is
 		grid[player.x+x][player.y+y].removeTreasure();
-		this->playerMove(x, y);
+		this->playerMove(x, y, dir);
 	}
 	else{
 		msg = "*Dragon Hoard* is not collectable at the moment";

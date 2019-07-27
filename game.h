@@ -40,12 +40,13 @@ class Game{
 	void init();
 	void nextFloor(); //go to next floor
 	int calculateScore(); //calculate current score
+	string getDir(string); //returns full name of any direction
 
 	//player associated functions
-	void playerMove(int x, int y);
+	void playerMove(int x, int y, string dir);
 	void playerAttack(int x, int y); //attacks something in certain direction
 	void playerConsume(int x, int y); //consumes something(potion) in certain direction
-	void playerCollect(int row, int col); //collects gold at current spot
+	void playerCollect(int row, int col, string dir); //collects gold at current spot
 
 	//enemy associated functions
 	void enemyRadiusCheck(); //checks for the list of enemies, if there is player around them

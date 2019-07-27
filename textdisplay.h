@@ -11,7 +11,12 @@ class TextDisplay{
 	const int BOARDWIDTH = 79;
 	public:
 	TextDisplay();
+	
+	//getter
 	char getChar(int row, int col) {return theDisplay[row][col];}
+	
+	//setter
+	void setChar(int row, int col, char c){theDisplay[row][col] = c;}
 	friend istream &operator >>(istream &in, TextDisplay &td);
 	friend ostream &operator<<(ostream &out, const TextDisplay &td);
 };
