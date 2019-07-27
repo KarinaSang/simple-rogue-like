@@ -72,16 +72,24 @@ void Game::init(){
 					//search for position of dragon hoard
 					for(int a = -1; a <= 1; a++){
 						for(int b = -1; b <= 1; b++){
-							if(td->getChar(i+a, j+b) == '9'){ //found dragon hoard
+							if(td->getChar(i+a, j+b) == '9' ||
+									td->getChar(i+a, j+b) == 'B'){ //found dragon hoard/barrier suit
 								shared_ptr <Treasure> t = make_shared<Treasure> (6, false); //dragon hoard
+
+								if(td->getChar(i+a, j+b) == 'B'){
+									t->setSuit();
+								}
+
 								grid[i+a][j+b].addTreasure(t); //add treasure to cell
-								td->setChar(i+a, j+b, 'G'); //set textdisplay back to G
+
+								if(td->getChar(i+a, j+b) == '9'){
+									td->setChar(i+a, j+b, 'G'); //set textdisplay back to G
+								}
+
 								shared_ptr<Enemy> d = make_shared<Dragon>(make_shared <Cell>(grid[i+a][j+b])); //create dragon guarding dragon hoard
 								grid[i][j].addEnemy(d);
 								enemy.emplace_back(Position {i,j});
-							}
-							else if(td->getChar(i+a, j+b) == 'B'){
-								//TODO: ADD BARRIER SUIT
+								break;
 							}
 						}
 					}
@@ -97,7 +105,8 @@ void Game::init(){
 				case '7': //small hoard
 					//change textdisplay back to G
 					break;
-				case 'C': //compass
+				case 'C':{ //compass
+					
 					break;
 			
 			}
