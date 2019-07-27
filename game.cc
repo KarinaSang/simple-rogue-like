@@ -259,9 +259,13 @@ void Game::playerAttack(int x, int y){
 				msg += " The dragon hoard is now collectable!";
 
 				if(temp->getCompass()){
-						msg+= " You picked up a Compass too!";
-						td->setChar(compass.x, compass.y, '\\');
+						msg+= " Dragon dropped a Compass!";
+						shared_ptr <Treasure> t = make_shared <Treasure> (0, true);
+						t->setCompass();
+						td->setChar(player.x+x, player.y+y, 'C'); //change the display
+						grid[player.x+x][player.y+y].addTreasure(t); //add compass to associated cell
 				}
+
 			}
 			else if(temp->getRace() == "Merchant"){
 				
@@ -282,9 +286,11 @@ void Game::playerAttack(int x, int y){
 
 				//check if enemy has the compass
 				if(temp->getCompass()){
-					msg += " You picked up a Compass!";
-				
-					td->setChar(compass.x, compass.y, '\\');//displays the stairs	
+					msg += " " + temp->getRace() + " dropped a Compass!";
+					shared_ptr <Treasure> t = make_shared <Treasure> (0, true);
+					t->setCompass();
+					td->setChar(player.x+x, player.y+y, 'C'); //change the display
+					grid[player.x+x][player.y+y].addTreasure(t); //add compass to associated cell	
 				}	
 			}
 
@@ -324,10 +330,21 @@ void Game::playerConsume(int x, int y){
 
 void Game::playerCollect(int x, int y, string dir){
 	shared_ptr<Treasure> temp = grid[player.x+x][player.y+y].getTreasure();
-	if(temp != nullptr && temp->isCollectable()){
+	if(temp != nullptr && temp->isCollectable()){ //could be gold, barrier suit, or compass
+
+		if(temp->isSuit()){
+			suitEquipped = true;
+			msg = "You are now equipped with the Barrier Suit";
+		}
+		else if(temp->isCompass()){
+			td->setChar(compass.x, compass.y, '\\');
+			msg = "You have acquired a Compass! Stairs to the next floor are now showing.";
+		}
+		else{	
 		grid[player.x][player.y].getPlayer()->collect(temp);
 		
 		msg = "You have acquired " + to_string(temp->getValue()) + " gold!";
+		}
 
 		//move the player to where the gold is
 		grid[player.x+x][player.y+y].removeTreasure();
@@ -418,14 +435,15 @@ void Game::allEnemyMove(){
 		if (temp->getDisplay() == 'D') continue;
 		while (true) {
 			int x = temp->randNum();
-			if (x == 0) {
 			int y = temp->randNum();
-				while (y == 0) {
-			  	y = temp->randNum();
-				}
+
+			while (x == 0 && y == 0) {
+				y = temp->randNum();
 			}
+
 			int newX = e.x+x;
 			int newY = e.y+y;
+
 			if (grid[newX][newY].isWalkable()&& !grid[newX][newY].isFilled()) {
 				enemyMove(newX, newY, e);
 				e.x = newX;
