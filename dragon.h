@@ -6,11 +6,8 @@
 
 
 class Dragon : public Enemy {
-	shared_ptr <Cell> treasure; //the treasure this dragon is guarding
-
 	public:
-	Dragon(shared_ptr <Cell> treasure);
-	shared_ptr<Cell> getTreasure() override{return treasure;}
+	Dragon(Position);
 };
 
 #endif

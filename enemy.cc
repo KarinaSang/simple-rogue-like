@@ -30,9 +30,6 @@ int Enemy::attack(shared_ptr <Player> p){
 	return 0;
 }
 
-shared_ptr <Cell> Enemy::getTreasure(){
-	return nullptr;
-}
 
 int Enemy::randNum() {
 	srand(time(0));

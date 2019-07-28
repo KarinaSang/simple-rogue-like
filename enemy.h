@@ -5,6 +5,7 @@
 #include <cmath>
 #include <ctime>
 #include "characterinfo.h"
+#include "position.h"
 
 
 using namespace std;
@@ -20,6 +21,7 @@ class Enemy{
 	int value = 1;
 	string race;
 	char display;
+	Position treasure {0, 0};
 
 	public:
 	Enemy(int hp, int atk, int def, string race, char display);
@@ -47,7 +49,9 @@ class Enemy{
 	int randNum();
 //	virtual void specialAbility(shared_ptr<Player>); //CAN IMPLEMENT stealing health/gold from a player
 	virtual int attack(shared_ptr<Player>);
-	virtual shared_ptr <Cell> getTreasure(); //dragon will implement this
+	Position getTreasure(){ //dragon will implement this
+		return treasure;
+	}
 };
 
 
