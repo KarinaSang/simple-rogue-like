@@ -113,37 +113,37 @@ void Game::init(){
 			  		break;
 				}
 				case '0':{ 
-					shared_ptr<Potion> rh = make_shared<Potion>(10, 0, 0, true);
+					shared_ptr<Potion> rh = make_shared<Potion>(10, 0, 0);
 					grid[i][j].addPotion(rh);
 					td->setChar(i, j, 'P');
 					break;
 				}
 				case '1': {
-					shared_ptr<Potion> ba = make_shared<Potion>(0, 5, 0, true);
+					shared_ptr<Potion> ba = make_shared<Potion>(0, 5, 0);
 					grid[i][j].addPotion(ba);
 					td->setChar(i, j, 'P');	
 					break;
 				}
 				case '2': {
-					shared_ptr<Potion> bd = make_shared<Potion>(0, 0, 5, true);
+					shared_ptr<Potion> bd = make_shared<Potion>(0, 0, 5);
 					grid[i][j].addPotion(bd);
 					td->setChar(i, j, 'P');
 					break;
 				}
 				case '3': {
-					shared_ptr<Potion> ph = make_shared<Potion>(10, 0, 0, false);
+					shared_ptr<Potion> ph = make_shared<Potion>(-10, 0, 0);
 					grid[i][j].addPotion(ph);
 					td->setChar(i, j, 'P');
 					break;
 				}
 				case '4': {
-					shared_ptr<Potion> wa = make_shared<Potion>(0, 5, 0, false);
+					shared_ptr<Potion> wa = make_shared<Potion>(0, -5, 0);
 					grid[i][j].addPotion(wa);
 					td->setChar(i, j, 'P');	
 					break;
 				}
 				case '5': {
-					shared_ptr<Potion> wd = make_shared<Potion>(0, 0, 5, false);
+					shared_ptr<Potion> wd = make_shared<Potion>(0, 0, -5);
 					grid[i][j].addPotion(wd);
 					td->setChar(i, j, 'P');
 					break;
