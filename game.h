@@ -36,7 +36,6 @@ class Game{
 	~Game() = default;
 	
 	vector <TextDisplay> floorplan; //the floor plan
-	const vector <TextDisplay> constFloorPlan;
 	const int BOARDWIDTH = 79;
 	const int BOARDHEIGHT = 25;
 	const int TOTALENEMY = 20;

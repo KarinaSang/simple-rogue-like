@@ -5,8 +5,8 @@
 #include "merchant.h"
 
 Game::Game(shared_ptr <Player> p): curP{p} {
-	srand(time(nullptr));
-	suitFloor = rand()%5+1;		
+	srand(time(0));
+	suitFloor = rand()%5+1;
 }
 
 
@@ -19,15 +19,19 @@ void Game::init(){
 		for(int j = 0; j < BOARDWIDTH; ++j){
 			char curChar = td->getChar(i, j);
 
-			grid[i].emplace_back(Cell {i, j, curChar});
+			grid[i].emplace_back(Cell {i, j, '.'});
 
 			//check what the current cell is
 			switch(curChar){
 				case '|':
 				case '-':
 				case '+':
+				case ' ':
 				case '#':
-				case '.':
+				case '.':{
+						 grid[i][j].setDisplay(curChar);
+						 break;
+					 }
 				case '9':
 				case 'B':{
 						break;
@@ -36,7 +40,6 @@ void Game::init(){
 					grid[i][j].addPlayer(curP);
 					player.x = i;
 					player.y = j;
-					grid[i][j].setDisplay('.');	
 					break;
 				}
 				case '\\':{ //stairs
@@ -112,31 +115,37 @@ void Game::init(){
 				case '0':{ 
 					shared_ptr<Potion> rh = make_shared<Potion>(10, 0, 0, true);
 					grid[i][j].addPotion(rh);
+					td->setChar(i, j, 'P');
 					break;
 				}
 				case '1': {
 					shared_ptr<Potion> ba = make_shared<Potion>(0, 5, 0, true);
 					grid[i][j].addPotion(ba);
+					td->setChar(i, j, 'P');	
 					break;
 				}
 				case '2': {
 					shared_ptr<Potion> bd = make_shared<Potion>(0, 0, 5, true);
 					grid[i][j].addPotion(bd);
+					td->setChar(i, j, 'P');
 					break;
 				}
 				case '3': {
 					shared_ptr<Potion> ph = make_shared<Potion>(10, 0, 0, false);
 					grid[i][j].addPotion(ph);
+					td->setChar(i, j, 'P');
 					break;
 				}
 				case '4': {
 					shared_ptr<Potion> wa = make_shared<Potion>(0, 5, 0, false);
 					grid[i][j].addPotion(wa);
+					td->setChar(i, j, 'P');	
 					break;
 				}
 				case '5': {
 					shared_ptr<Potion> wd = make_shared<Potion>(0, 0, 5, false);
 					grid[i][j].addPotion(wd);
+					td->setChar(i, j, 'P');
 					break;
 				}
 				case '6': {//normal gold
@@ -158,7 +167,7 @@ void Game::init(){
 	}
 
 	//generate the enemy that holds the Compass
-	srand(time(nullptr));
+	srand(time(0));
 	int n = (rand() % 20);
 	Position pos{enemy[n]};
 
@@ -172,19 +181,6 @@ void Game::init(){
 
 
 void Game::reset(shared_ptr <Player> p){
-	floorplan.clear();
-	floorplan.resize(TOTALFLOOR);
-
-	//resetting the floor plan
-	for(int i = 0; i < TOTALFLOOR; ++i){
-		floorplan[i].theDisplay = constFloorPlan[i].theDisplay;
-		floorplan[i].enemyCount = constFloorPlan[i].enemyCount;
-		floorplan[i].potionCount = constFloorPlan[i].potionCount;
-		floorplan[i].treasureCount = constFloorPlan[i].treasureCount;
-		floorplan[i].stairsCount = constFloorPlan[i].stairsCount;
-		floorplan[i].playerCount = constFloorPlan[i].playerCount;
-		floorplan[i].floorNumber = i+1;
-	}
 
 	td = make_shared <TextDisplay> (floorplan[0]);
 	msg = "You have spawned!";
@@ -279,16 +275,14 @@ void Game::playerMove(int x, int y, string dir){
 		grid[player.x][player.y].removePlayer();
 		msg = "You moved " + getDir(dir);
 		
+		//modifies display
+		td->setChar(player.x, player.y, grid[player.x][player.y].getDisplay());
+		td->setChar(newX, newY, '@');
+
+		//update player position in game
+		player.x = newX;
+		player.y = newY;
 	}
-
-	//update player position in game
-	player.x = newX;
-	player.y = newY;
-
-	//modifies display
-	td->setChar(player.x, player.y, grid[player.x][player.y].getDisplay());
-	td->setChar(newX, newY, '@');
-
 }
 
 
