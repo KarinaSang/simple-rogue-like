@@ -7,6 +7,8 @@
 
 using namespace std;
 
+class InvalidInput{};
+
 int main(int argc, char *argv[]){
 	if(argc < 2){
 		cerr << "Provide at least one input file name" << endl;
@@ -14,46 +16,48 @@ int main(int argc, char *argv[]){
 	}
 
 	//game essentials
-	TextDisplay td;
 	shared_ptr <Player> you;
+	
+	string cmd;
+	//setting up player race
+	try{
+		if(cmd == "h"){
+			you = (make_shared <BasicPlayer> ());
+		}
+		else if(cmd == "e"){
+			you = (make_shared <BasicPlayer> (140, 30, 10));
+			you = make_shared <ElfDecorator> (you);
+		}
+		else if(cmd == "d"){
+			you = (make_shared <BasicPlayer> (100, 20, 30));
+			you = make_shared <DwarfDecorator> (you);
+		}
+		else if(cmd == "o"){
+			you = (make_shared <BasicPlayer> (180, 30, 25));
+			you = make_shared <OrcDecorator> (you);
+		}
+		else if(cmd == "q"){
+			return 0;
+		}
+		else
+			throw InvalidInput{};
+	}
+	catch(InvalidInput &e){
+		cerr << "Invalid Input!" << endl;
+		exit(1);
+	}
 
-
-	//creating gameboard from file
+	//creating gameboard from file, five floors
+	Game game{you};
 	
 	ifstream myfile {argv[1]};
 
-	string line;
-	int rowCount = 0;
-	while(getline (myfile, line)){
-		for(int i = 0; i < int(line.length()); ++i){
-			td.setChar(rowCount, i, line[i]);
-		}
-		rowCount++;
+	for(int i = 0; i < game.TOTALFLOOR; ++i){
+		myfile >> noskipws >> game.floorplan[i];
+		game.floorplan[i].setFloor(i+1);
 	}
 
-	
-
-	string cmd;
-
-	//setting up player race
-	if(cmd == "h"){
-		you = (make_shared <BasicPlayer> ());
-	}
-	else if(cmd == "e"){
-		you = (make_shared <BasicPlayer> (140, 30, 10));
-		you = make_shared <ElfDecorator> (you);
-	}
-	else if(cmd == "d"){
-		you = (make_shared <BasicPlayer> (100, 20, 30));
-		you = make_shared <DwarfDecorator> (you);
-	}
-	else if(cmd == "o"){
-		you = (make_shared <BasicPlayer> (180, 30, 25));
-		you = make_shared <OrcDecorator> (you);
-	}
-	
-	Game game{you}; //creates the game;
-	game.setDisplay(make_shared <TextDisplay> (td));
+	game.setDisplay(make_shared <TextDisplay> (game.floorplan[0]));
 	game.init();
 	cout << game;
 
@@ -66,8 +70,36 @@ int main(int argc, char *argv[]){
 
 		}
 		else if(cmd == "r"){
-			
-			//TODO:restart the game
+			you = nullptr;
+			//setting up player race
+			try{
+				if(cmd == "h"){
+					you = (make_shared <BasicPlayer> ());
+				}
+				else if(cmd == "e"){
+					you = (make_shared <BasicPlayer> (140, 30, 10));
+					you = make_shared <ElfDecorator> (you);
+				}
+				else if(cmd == "d"){
+					you = (make_shared <BasicPlayer> (100, 20, 30));
+					you = make_shared <DwarfDecorator> (you);
+				}
+				else if(cmd == "o"){
+					you = (make_shared <BasicPlayer> (180, 30, 25));
+					you = make_shared <OrcDecorator> (you);
+				}
+				else if(cmd == "q"){
+					return 0;
+				}
+				else
+					throw InvalidInput{};
+			}
+			catch(InvalidInput &e){
+				cerr << "Invalid Input!" << endl;
+				exit(1);
+			}
+
+			game.reset(you);
 
 		}		
 		else if(cmd == "u"){
@@ -91,7 +123,52 @@ int main(int argc, char *argv[]){
 				game.generateEnemyMove(e);
 			}
 		}
-		cout << game;
+
+		//check the current game status
+		if(game.getStatus()){
+			cout << game;
+		}
+		else{
+			cout << "Game over. Please enter 'q' to quit or 'r' to restart" << endl;
+			cin >> cmd;
+			
+			if(cmd == "q") return 0;
+			else if(cmd == "r"){ //restarting the game
+				you = nullptr;
+				//setting up player race
+				try{
+					if(cmd == "h"){
+						you = (make_shared <BasicPlayer> ());
+					}
+					else if(cmd == "e"){
+						you = (make_shared <BasicPlayer> (140, 30, 10));
+						you = make_shared <ElfDecorator> (you);
+					}
+					else if(cmd == "d"){
+						you = (make_shared <BasicPlayer> (100, 20, 30));
+						you = make_shared <DwarfDecorator> (you);
+					}
+					else if(cmd == "o"){
+						you = (make_shared <BasicPlayer> (180, 30, 25));
+						you = make_shared <OrcDecorator> (you);
+					}
+					else if(cmd == "q"){
+						return 0;
+					}
+					else
+						throw InvalidInput{};
+				}
+				catch(InvalidInput &e){
+					cerr << "Invalid Input!" << endl;
+					exit(1);
+				}
+
+				game.reset(you);
+
+			}
+			else return 1;
+		}		
+			
 	}	
 }
 

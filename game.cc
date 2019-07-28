@@ -4,16 +4,22 @@
 #include "dragon.h"
 #include "merchant.h"
 
-Game::Game(shared_ptr <Player> p): curP{p} {}
+Game::Game(shared_ptr <Player> p): curP{p} {
+	srand(time(nullptr));
+	suitFloor = rand()%5+1;		
+}
 
 
-void Game::init(){
-	
+void Game::init(){	
+	td->generate(suitFloor);
+	grid.clear();
+	grid.resize(BOARDHEIGHT);
+
 	for(int i = 0; i < BOARDHEIGHT; ++i){
 		for(int j = 0; j < BOARDWIDTH; ++j){
 			char curChar = td->getChar(i, j);
 
-			grid[i][j] = Cell {i, j, curChar};
+			grid[i].emplace_back(Cell {i, j, curChar});
 
 			//check what the current cell is
 			switch(curChar){
@@ -29,7 +35,8 @@ void Game::init(){
 				case '@':{ //player
 					grid[i][j].addPlayer(curP);
 					player.x = i;
-					player.y = j;	
+					player.y = j;
+					grid[i][j].setDisplay('.');	
 					break;
 				}
 				case '\\':{ //stairs
@@ -163,13 +170,49 @@ void Game::init(){
 	grid[pos.x][pos.y].getEnemy()->setCompass();
 }
 
+
+void Game::reset(shared_ptr <Player> p){
+	floorplan.clear();
+	floorplan.resize(TOTALFLOOR);
+
+	//resetting the floor plan
+	for(int i = 0; i < TOTALFLOOR; ++i){
+		floorplan[i].theDisplay = constFloorPlan[i].theDisplay;
+		floorplan[i].enemyCount = constFloorPlan[i].enemyCount;
+		floorplan[i].potionCount = constFloorPlan[i].potionCount;
+		floorplan[i].treasureCount = constFloorPlan[i].treasureCount;
+		floorplan[i].stairsCount = constFloorPlan[i].stairsCount;
+		floorplan[i].playerCount = constFloorPlan[i].playerCount;
+		floorplan[i].floorNumber = i+1;
+	}
+
+	td = make_shared <TextDisplay> (floorplan[0]);
+	msg = "You have spawned!";
+	floorCount = 1;
+	suitEquipped = false;
+	mHostility = false;
+
+	srand(time(nullptr));
+	suitFloor = rand()%5+1;
+
+	curP = p;
+	enemy.clear();
+	carriedPotions.clear();
+
+	init();
+
+}
+
+
+
 void Game::nextFloor(){
+	if(floorCount == TOTALFLOOR){ //finished all floors
+		gameStatus = false;
+		return;
+	}
+
 	++floorCount;
-
-	//TODO:regenerate textdisplay
-	//...
-	cin >> *td;
-
+	td = make_shared <TextDisplay> (floorplan[floorCount-1]);
 	this->init();
 }
 
@@ -268,7 +311,7 @@ void Game::playerAttack(int x, int y){
 
 			if(temp->getRace() == "Dragon"){
 				
-				//the dragon hoard is now collectable
+				//the dragon hoard/barrier suit is now collectable
 				temp->getTreasure()->getTreasure()->setCollectable();
 				msg += " The dragon hoard is now collectable!";
 
@@ -330,9 +373,15 @@ void Game::playerConsume(int x, int y){
 		msg = "You just consumed a " + temp->potionInfo();
 
 		//modifies display
-		td->setChar(player.x, player.y, grid[player.x][player.y].getDisplay());
+		td->setChar(player.x, player.y, '.');
 		td->setChar(player.x+x, player.y+y, '@');
+		
+		//remove
+		grid[player.x+x][player.y+y].removePotion();
 
+		if(grid[player.x][player.y].getPlayer()->isDead()){
+			gameStatus = false;
+		}
 	}
 	else{
 		cerr << "Invalid Move!" << endl;
@@ -344,10 +393,12 @@ void Game::playerConsume(int x, int y){
 
 void Game::playerCollect(int x, int y, string dir){
 	shared_ptr<Treasure> temp = grid[player.x+x][player.y+y].getTreasure();
+	shared_ptr<Player> p = grid[player.x][player.y].getPlayer();
+
 	if(temp != nullptr && temp->isCollectable()){ //could be gold, barrier suit, or compass
 
 		if(temp->isSuit()){
-			suitEquipped = true;
+			p->suitToggle();
 			msg = "You are now equipped with the Barrier Suit";
 		}
 		else if(temp->isCompass()){
@@ -355,9 +406,8 @@ void Game::playerCollect(int x, int y, string dir){
 			msg = "You have acquired a Compass! Stairs to the next floor are now showing.";
 		}
 		else{	
-		grid[player.x][player.y].getPlayer()->collect(temp);
-		
-		msg = "You have acquired " + to_string(temp->getValue()) + " gold!";
+			p->addGold(temp->getValue());
+			msg = "You have acquired " + to_string(temp->getValue()) + " gold!";
 		}
 
 		//move the player to where the gold is
@@ -365,7 +415,7 @@ void Game::playerCollect(int x, int y, string dir){
 		this->playerMove(x, y, dir);
 	}
 	else{
-		msg = "*Dragon Hoard* is not collectable at the moment";
+		msg = "The treasure is not collectable at the moment";
 		//could throw an exception
 		cerr << "Invalid Move!" << endl;
 	}
@@ -374,142 +424,80 @@ void Game::playerCollect(int x, int y, string dir){
 
 //enemy specific methods
 bool Game::enemyRadiusCheck(Position e){
-	Position no{-1, 0};
-	Position so{1, 0};
-	Position ea{0, 1};
-	Position we{0, -1};
-	Position ne{-1, 1};
-	Position nw{-1, -1};
-	Position se{1, 1};
-	Position sw{1, -1};
+
 	shared_ptr<Player> p = grid[player.x][player.y].getPlayer();
-	shared_ptr <Enemy> temp;
+	shared_ptr <Enemy> temp = grid[e.x][e.y].getEnemy();
 	
-	bool check = true;
-		temp = grid[e.x][e.y].getEnemy();
-		if (temp->getDisplay() == 'D') {
-			if (radiusHoardCheck(temp)) check = true;
-			else check = false;
-		}
-		if (check == true) {
-			//check if player is north of enemy
-			if (((e.x+no.x) == player.x) && ((e.y+no.y) == player.y)) {
-				temp->attack(p);
-				return true;
-			}
+	//check if the dragon should be hostile
+	if (temp->getDisplay() == 'D' && !radiusHoardCheck(temp)) {
+		return false;
+	}
 
-			//check if player is south of enemy
-			if (((e.x+so.x) == player.x) && ((e.y+so.y) == player.y)) {
-				temp->attack(p);
-				return true;
-			}
-
-			//check if player is east of enemy
-			if (((e.x+ea.x) == player.x) && ((e.y+ea.y) == player.y)) {
-				temp->attack(p);
-				return true;
-			}	
+	//check if player is around enemy
+	if(abs(player.x-e.x)<= 1 && abs(player.y-e.y) <= 1){
+		int n = temp->attack(p); //enemy attacks
+	
+		if(n == 0)
+			msg += temp->getRace() + " missed!";
+		else
+			msg += temp->getRace() + " dealt " + to_string(n) + " damage to you.";
 		
-			//check if player is west of enemy
-			if (((e.x+we.x) == player.x) && ((e.y+we.y) == player.y)) {
-				temp->attack(p);
-				return true;
-			}
-			//check if player is north east of enemy
-			if (((e.x+ne.x) == player.x) && ((e.y+ne.y) == player.y)) {
-				temp->attack(p);
-				return true;
-			}
-
-			//check if player is north west of enemy
-			if (((e.x+nw.x) == player.x) && ((e.y+nw.y) == player.y)) {
-				temp->attack(p);
-				return true;
-			}
-
-			//check if player is south east of enemy
-			if (((e.x+se.x) == player.x) && ((e.y+se.y) == player.y)) {
-				temp->attack(p);
-				return true;
-			}
-
-			//check if player is south west of enemy
-			if (((e.x+sw.x) == player.x) && ((e.y+sw.y) == player.y)) {
-				temp->attack(p);
-				return true;
-			}
+		//if player is dead
+		if(p->isDead()){
+			gameStatus = false;
 		}
+
+		return true;
+	}
+
 	return false;
 }
 
-void Game::generateEnemyMove(Position e){
-	shared_ptr <Enemy> temp;
+void Game::generateEnemyMove(Position &e){
+	shared_ptr <Enemy> temp = grid[e.x][e.y].getEnemy();
 
-		temp = grid[e.x][e.y].getEnemy();
-		if (temp->getDisplay() == 'D') return;
-		while (true) {
-			int x = temp->randNum();
-			int y = temp->randNum();
+	if (temp->getDisplay() == 'D') return;
 
-			while (x == 0 && y == 0) {
-				y = temp->randNum();
-			}
+	while(true){	
+		int x = temp->randNum();
+		int y = temp->randNum();
 
-			int newX = e.x+x;
-			int newY = e.y+y;
-
-			if (grid[newX][newY].isWalkable()&& !grid[newX][newY].isFilled()) {
-				enemyMove(newX, newY, e);
-				e.x = newX;
-				e.y = newY;
-				break;
-			}
+		while (x == 0 && y == 0){ //enemy must move
+			y = temp->randNum();
 		}
+
+		int newX = e.x+x;
+		int newY = e.y+y;
+
+		if (grid[newX][newY].getDisplay() == '.' && !grid[newX][newY].isFilled()) {
+			enemyMove(newX, newY, e);
+			e.x = newX;
+			e.y = newY;
+			break;
+		}
+	}
 
 }
 
 void Game::enemyMove(int x, int y, Position pos){
-	grid[x][y].addEnemy(grid[pos.x][pos.y].getEnemy());
+	shared_ptr <Enemy> temp = grid[pos.x][pos.y].getEnemy();
+	grid[x][y].addEnemy(temp);
+
+	//display
+	td->setChar(pos.x, pos.y, '.');
+	td->setChar(x, y, temp->getDisplay());
+
 	grid[pos.x][pos.y].removeEnemy();
-	pos.x = x;
-	pos.y = y;
+
 }
 
 bool Game::radiusHoardCheck(shared_ptr<Enemy> d) {
-	Position no{-1, 0};
-	Position so{1, 0};   
-	Position ea{0, 1};
-	Position we{0, -1};
-	Position ne{-1, 1};
-	Position nw{-1, -1};
-	Position se{1, 1};  
-	Position sw{1, -1};
 	int row = d->getTreasure()->getRow();
 	int col = d->getTreasure()->getCol();
-	//check if player is north of hoard
-	if (((row+no.x) == player.x) && ((col+no.y) == player.y)) 
+
+	if(abs(player.x-row) <= 1 && abs(player.y-col) <= 1)
 		return true;
-	//check if player is south of hoard
-	if (((row+so.x) == player.x) && ((col+so.y) == player.y)) 
-		return true;
-	//check if player is east of hoard
-	if (((row+ea.x) == player.x) && ((col+ea.y) == player.y))
-		return true;
-	//check if player is west of hoard
-	if (((row+we.x) == player.x) && ((col+we.y) == player.y))
-		return true;
-	//check if player is north east of hoard
-	if (((row+ne.x) == player.x) && ((col+ne.y) == player.y))
-		return true;
-	//check if player is north west of hoard
-	if (((row+nw.x) == player.x) && ((col+nw.y) == player.y)) 
-		return true;
-	//check if player is south east of hoard
-	if (((row+se.x) == player.x) && ((col+se.y) == player.y)) 
-		return true;
-	//check if player is south west of hoard
-	if (((row+sw.x) == player.x) && ((col+sw.y) == player.y)) 
-		return true;
+
 	return false;
 }
 
