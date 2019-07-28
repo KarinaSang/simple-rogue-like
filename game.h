@@ -55,7 +55,7 @@ class Game{
 	Position getPos(string); // returns position associated with direction
 
 	//player associated functions
-	vector<Position> getEnemy(){return enemy;}
+	vector<Position> &getEnemy(){return enemy;}
 
 
 	void playerMove(int x, int y, string dir);

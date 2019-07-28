@@ -15,7 +15,7 @@ int Enemy::attack(shared_ptr <Player> p){
 	int randNum = rand() % 2;
 
 	if(randNum == 0){	
-		int damage = ceil((100/(100+p->getCurInfo().def))*info.atk);
+		int damage = ceil((100.0/(100+p->getCurInfo().def))*info.atk);
 
 		if(p->hasSuit()){ //if player has barrier suit
 			damage /= 2;
