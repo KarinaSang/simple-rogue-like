@@ -424,7 +424,9 @@ bool Game::enemyRadiusCheck(Position e){
 
 	shared_ptr<Player> p = grid[player.x][player.y].getPlayer();
 	shared_ptr <Enemy> temp = grid[e.x][e.y].getEnemy();
-	
+
+	if(temp == nullptr) return false;
+
 	//check if the dragon should be hostile
 	if (temp->getDisplay() == 'D' && !radiusHoardCheck(temp)) {
 		return false;
@@ -466,6 +468,7 @@ void Game::generateEnemyMove(Position &e){
 
 		while (x == 0 && y == 0){ //enemy must move
 			y = temp->randNum();
+			x = temp->randNum();
 		}
 
 		int newX = e.x+x;
@@ -483,13 +486,15 @@ void Game::generateEnemyMove(Position &e){
 
 void Game::enemyMove(int x, int y, Position pos){
 	shared_ptr <Enemy> temp = grid[pos.x][pos.y].getEnemy();
-	grid[x][y].addEnemy(temp);
+	if(temp != nullptr){
+		grid[x][y].addEnemy(temp);
 
-	//display
-	td->setChar(pos.x, pos.y, '.');
-	td->setChar(x, y, temp->getDisplay());
+		//display
+		td->setChar(pos.x, pos.y, '.');
+		td->setChar(x, y, temp->getDisplay());
 
-	grid[pos.x][pos.y].removeEnemy();
+		grid[pos.x][pos.y].removeEnemy();
+	}
 
 }
 
