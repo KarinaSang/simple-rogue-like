@@ -150,12 +150,12 @@ istream &operator>> (istream&in, TextDisplay &td){
 	char c;
 	td.theDisplay.resize(td.BOARDHEIGHT);
 
-	for(int i = 0; i < td.BOARDHEIGHT; ++i){
-		td.theDisplay[i].resize(td.BOARDWIDTH);
+	for(int m = 0; m < td.BOARDHEIGHT; ++m){
+		td.theDisplay[m].resize(td.BOARDWIDTH+1);
 
-		for(int j = 0; j < td.BOARDWIDTH; ++j){
+		for(int n = 0; n < td.BOARDWIDTH; ++n){
 			in >> noskipws >> c;
-			td.theDisplay[i][j] = c;
+			td.theDisplay[m][n] = c;
 
 			//checks what the input is
 			if(c == '\\'){
@@ -169,7 +169,7 @@ istream &operator>> (istream&in, TextDisplay &td){
 			}
 			else if(c-'0' >= 6 && c-'0' <= 9){
 			       if(c-'0' == 8){//if merchant hoard
-				       td.theDisplay[i][j] = 'M';
+				       td.theDisplay[m][n] = 'M';
 				       ++td.enemyCount;
 			       }
 			       else{
@@ -184,16 +184,18 @@ istream &operator>> (istream&in, TextDisplay &td){
 			       	++td.enemyCount;	
 			}
 		}
+		in >> noskipws >> c; //new line character
 	}
 	return in;
 }
 
 
 ostream &operator<< (ostream &out, const TextDisplay &td){
-	for(int i = 0; i < td.BOARDHEIGHT; ++i){
-		for(int j = 0; j < td.BOARDWIDTH; ++j){
-			out << td.theDisplay[i][j];
+	for(int r = 0; r < td.BOARDHEIGHT; ++r){
+		for(int t = 0; t < td.BOARDWIDTH; ++t){
+			out << td.theDisplay[r][t];
 		}
+		out << endl;
 	}
 	return out;
 }

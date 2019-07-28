@@ -8,7 +8,7 @@
 using namespace std;
 
 class TextDisplay{
-	vector<vector<char>> theDisplay;
+//	vector<vector<char>> theDisplay;
 
 	const int BOARDWIDTH = 79;
 	const int BOARDHEIGHT = 25;
@@ -26,6 +26,8 @@ class TextDisplay{
 	friend class Game;
 
 	public:
+	vector <vector<char>> theDisplay;
+
 	TextDisplay();
 	void generate(int floor);
 	void generateStairs();
