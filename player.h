@@ -15,7 +15,6 @@ class Player{
 
 	//items
 	bool suitEquipped = false;
-	bool compassEquipped = false; //DO WE NEED THIS?
 
 	protected:
 	string race;
@@ -41,7 +40,6 @@ class Player{
 
 	bool isDead(){return (curInfo.hp == 0);}
 	void resetPlayer(); //removes effects of all temporary potions
-	void collect(shared_ptr <Treasure>);
 	virtual void usePotion(shared_ptr <Potion>);
 };
 

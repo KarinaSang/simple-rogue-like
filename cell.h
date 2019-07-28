@@ -44,12 +44,13 @@ class Cell{
 	void addEnemy(shared_ptr<Enemy> e){enemy = make_shared<Enemy>(*e);}
 	void addPotion(shared_ptr<Potion> p){potion = make_shared<Potion>(*p);}
 	void addTreasure(shared_ptr<Treasure> t){treasure = make_shared<Treasure>(*t);}
+	void setDisplay(char c){display = c;}
 
 	//when a gold/potion is collected/consumed, or when a player/enemy moves/dies
 	void removePlayer(){player = nullptr;}
-	void removeEnemy(){enemy = nullptr;}
-	void removePotion(){potion = nullptr;}
-	void removeTreasure(){treasure = nullptr;}
+	void removeEnemy(){enemy = nullptr; display = '.';}
+	void removePotion(){potion = nullptr; display = '.';}
+	void removeTreasure(){treasure = nullptr; display = '.';}
 
 	bool isFilled(); //check if the current cell is occupied
 	bool isStairs(); //check if the current cell is the stairs

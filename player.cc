@@ -17,4 +17,3 @@ void Player::usePotion(shared_ptr <Potion> p){
 	if(curInfo.def < 0) curInfo.def = 0;
 }
 
-
