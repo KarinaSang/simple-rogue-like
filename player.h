@@ -32,7 +32,10 @@ class Player{
 	int getGold(){return gold;}
 
 	//setter methods
-	void addHp(int n){curInfo.hp += n;}
+	void addHp(int n){
+		curInfo.hp += n;
+		if(curInfo.hp < 0) curInfo.hp = 0;
+	}
 	void addAtk(int n){curInfo.atk += n;}
 	void addDef(int n){curInfo.def += n;}
 	virtual	void addGold(int n){gold += n;}

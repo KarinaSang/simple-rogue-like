@@ -11,7 +11,7 @@ Game::Game(shared_ptr <Player> p): curP{p} {
 
 
 void Game::init(){	
-	td->generate(suitFloor);
+//	td->generate(suitFloor); //RANDOM GENERATION OF THE BOARD
 	grid.clear();
 	grid.resize(BOARDHEIGHT);
 
@@ -28,12 +28,12 @@ void Game::init(){
 				case '+':
 				case ' ':
 				case '#':
-				case '.':{
+				case '.':
+				case 'B':{
 						 grid[i][j].setDisplay(curChar);
 						 break;
 					 }
-				case '9':
-				case 'B':{
+				case '9':{
 						break;
 					 }
 				case '@':{ //player
@@ -105,7 +105,6 @@ void Game::init(){
 								shared_ptr<Enemy> d = make_shared<Dragon>(make_shared <Cell>(grid[i+a][j+b])); //create dragon guarding dragon hoard
 								grid[i][j].addEnemy(d);
 								enemy.emplace_back(Position {i,j});
-								break;
 							}
 						}
 					}
@@ -279,8 +278,6 @@ void Game::playerMove(int x, int y, string dir){
 		td->setChar(player.x, player.y, grid[player.x][player.y].getDisplay());
 		td->setChar(newX, newY, '@');
 		
-		cerr << "plaer old: " << player.x << player.y << endl;
-		cerr << "player new: " << newX << newY << endl;	
 		//update player position in game
 		player.x = newX;
 		player.y = newY;
@@ -460,6 +457,8 @@ bool Game::enemyRadiusCheck(Position e){
 void Game::generateEnemyMove(Position &e){
 	shared_ptr <Enemy> temp = grid[e.x][e.y].getEnemy();
 
+	if(temp == nullptr) return;
+
 	if (temp->getDisplay() == 'D') return;
 
 	while(true){	
@@ -499,17 +498,21 @@ void Game::enemyMove(int x, int y, Position pos){
 }
 
 bool Game::radiusHoardCheck(shared_ptr<Enemy> d) {
-	int row = d->getTreasure()->getRow();
-	int col = d->getTreasure()->getCol();
+	shared_ptr <Cell> temp = d->getTreasure();
+
+	if(temp != nullptr){
+	int row = temp->getRow();
+	int col = temp->getCol();
 
 	if(abs(player.x-row) <= 1 && abs(player.y-col) <= 1)
 		return true;
+	}
 
 	return false;
 }
 
 ostream &operator<<(ostream &out, Game &g){
-	out << *(g.td);
+	out << *(g.td) <<endl;
 
 	shared_ptr <Player> temp = g.grid[g.player.x][g.player.y].getPlayer();
 

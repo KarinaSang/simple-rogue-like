@@ -34,7 +34,11 @@ class Enemy{
 	bool isDead(){return info.hp == 0;}
 
 	//setter methods(might not need to modify enemy's base ratio)
-	void addHp(int n) {info.hp += n;}
+	void addHp(int n) {
+		info.hp += n;
+		if(info.hp < 0)
+			info.hp = 0;
+	}
 	void addAtk(int n) {info.atk += n;}
 	void addDef(int n) {info.def += n;}
 	void setValue(int n) {value = n;}

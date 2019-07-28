@@ -59,11 +59,12 @@ int main(int argc, char *argv[]){
 	for(int a = 0; a < game.TOTALFLOOR; ++a){
 		myfile >> game.floorplan[a];
 		game.floorplan[a].setFloor(a+1);
-		cout << game.floorplan[a];
 	}
 	myfile.close();
 
 	game.setDisplay(make_shared <TextDisplay> (game.floorplan[0]));
+
+
 	game.init();
 	cout << game;
 
@@ -132,10 +133,8 @@ int main(int argc, char *argv[]){
 		}
 
 		//check the current game status
-		if(game.getStatus()){
 			cout << game;
-		}
-		else{
+		if(!game.getStatus()){
 			cout << "Game over. Please enter 'q' to quit or 'r' to restart" << endl;
 			cin >> cmd;
 			
