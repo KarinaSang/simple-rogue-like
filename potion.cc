@@ -13,7 +13,7 @@ string Potion::potionInfo(){
 		return "Boost Attack Potion";
 	else if(def > 0)
 		return "Boost Defence Potion";
-	if(hp < 0)
+	else if(hp < 0)
 		return "Poison Health Potion";
 	else if(atk < 0)
 		return "Wound Attack Potion";

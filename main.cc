@@ -56,10 +56,10 @@ int main(int argc, char *argv[]){
 	game.floorplan.resize(game.TOTALFLOOR);
 	
 
-	for(int i = 0; i < game.TOTALFLOOR; ++i){
-		myfile >> game.floorplan[i];
-		game.floorplan[i].setFloor(i+1);
-		cout << game.floorplan[i];
+	for(int a = 0; a < game.TOTALFLOOR; ++a){
+		myfile >> game.floorplan[a];
+		game.floorplan[a].setFloor(a+1);
+		cout << game.floorplan[a];
 	}
 	myfile.close();
 

@@ -10,20 +10,13 @@ class Potion{
 	int atk;
 	int def;
 
-
 	public:
-	Potion(int hp, int atk, int def, bool effect);
-
 	//getter
 	int getHp(){return hp;}
 	int getAtk(){return atk;}
 	int getDef(){return def;}
 
-	//setter
-	void setHp(int n);
-	void setAtk(int n);
-	void setDef(int n);
-
+	Potion(int hp, int atk, int def);
 	string potionInfo();
 
 };
