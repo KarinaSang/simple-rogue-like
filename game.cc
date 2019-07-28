@@ -45,6 +45,7 @@ void Game::init(){
 				case '\\':{ //stairs
 					stairs.x = i;
 					stairs.y = j;
+					grid[i][j].setDisplay(curChar);
 					td->setChar(i, j, '.');		
 					break;
 				}
@@ -102,9 +103,11 @@ void Game::init(){
 									td->setChar(i+a, j+b, 'G'); //set textdisplay back to G
 								}
 
-								shared_ptr<Enemy> d = make_shared<Dragon>(make_shared <Cell>(grid[i+a][j+b])); //create dragon guarding dragon hoard
+								shared_ptr<Enemy> d = make_shared<Dragon>(Position {i+a, j+b}); //create dragon guarding dragon hoard
 								grid[i][j].addEnemy(d);
 								enemy.emplace_back(Position {i,j});
+
+								cerr << d->getTreasure().x << d->getTreasure().y << endl;
 							}
 						}
 					}
@@ -167,11 +170,11 @@ void Game::init(){
 
 	//generate the enemy that holds the Compass
 	srand(time(0));
-	int n = (rand() % 20);
+	int n = (rand() % td->enemyCount);
 	Position pos{enemy[n]};
 
 	while(td->getChar(pos.x, pos.y) == 'D'){
-		n = (rand()%20);
+		n = (rand()% td->enemyCount);
 		pos = enemy[n];
 	}
 
@@ -208,6 +211,8 @@ void Game::nextFloor(){
 
 	++floorCount;
 	td = make_shared <TextDisplay> (floorplan[floorCount-1]);
+	enemy.clear();
+
 	this->init();
 }
 
@@ -304,9 +309,12 @@ void Game::playerAttack(int x, int y){
 			td->setChar(player.x+x, player.y+y, '.'); //removes enemy from the display
 
 			if(temp->getRace() == "Dragon"){
+				Position tempT = temp->getTreasure();
 				
+				cerr << "dragon hoard " << tempT.x << tempT.y << endl;
+
 				//the dragon hoard/barrier suit is now collectable
-				temp->getTreasure()->getTreasure()->setCollectable();
+				grid[tempT.x][tempT.y].getTreasure()->setCollectable();
 				msg += " The dragon hoard is now collectable!";
 
 				if(temp->getCompass()){
@@ -498,15 +506,11 @@ void Game::enemyMove(int x, int y, Position pos){
 }
 
 bool Game::radiusHoardCheck(shared_ptr<Enemy> d) {
-	shared_ptr <Cell> temp = d->getTreasure();
-
-	if(temp != nullptr){
-	int row = temp->getRow();
-	int col = temp->getCol();
+	int row = d->getTreasure().x;
+	int col = d->getTreasure().y;
 
 	if(abs(player.x-row) <= 1 && abs(player.y-col) <= 1)
 		return true;
-	}
 
 	return false;
 }
