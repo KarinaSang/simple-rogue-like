@@ -88,8 +88,8 @@ void Game::init(){
 					//search for position of dragon hoard
 					for(int a = -1; a <= 1; a++){
 						for(int b = -1; b <= 1; b++){
-							if(td->getChar(i+a, j+b) == '9' ||
-									td->getChar(i+a, j+b) == 'B'){ //found dragon hoard/barrier suit
+							if(td->getChar(i+a, j+b) == '9'
+									|| td->getChar(i+a, j+b) == 'B'){ //found dragon hoard/barrier suit
 								shared_ptr <Treasure> t = make_shared<Treasure> (6, false); //dragon hoard
 
 								if(td->getChar(i+a, j+b) == 'B'){
@@ -180,7 +180,7 @@ void Game::init(){
 }
 
 
-void Game::reset(shared_ptr <Player> p){
+void Game::reset (shared_ptr <Player> p){
 
 	td = make_shared <TextDisplay> (floorplan[0]);
 	msg = "You have spawned!";
