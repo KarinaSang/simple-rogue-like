@@ -1,0 +1,7 @@
+- race not printing
+- player decorator not working
+- reset prints two game boards
+- test barrier suit and compass
+- test merchant hostility
+- check todos
+- turn on random generation before submitting
