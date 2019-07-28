@@ -7,7 +7,7 @@ void Player::resetPlayer(){
 	curInfo.def = defaultInfo.def;
 }
 
-void Player::usePotion(shared_ptr <Potion> p){
+void Player::usePotion(shared_ptr <Potion> p){ 
 	curInfo.hp += p->getHp();
 	if(curInfo.hp < 0) curInfo.hp = 0;
 	else if(curInfo.hp > defaultInfo.hp) curInfo.hp = defaultInfo.hp;

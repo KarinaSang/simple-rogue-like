@@ -46,7 +46,7 @@ Position TextDisplay::randPos(){
 void TextDisplay::generateStairs(){
 	Position p = randPos();
 	
-	//.......
+	//TODO: stairs in same room as player
 
 	theDisplay[p.x][p.y] = '\\';
 	++stairsCount;
