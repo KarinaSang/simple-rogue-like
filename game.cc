@@ -183,6 +183,7 @@ void Game::init(){
 
 
 void Game::reset (shared_ptr <Player> p){
+	gameStatus = true; //game is being run again
 
 	td = make_shared <TextDisplay> (floorplan[0]);
 	msg = "You have spawned!";
@@ -275,7 +276,7 @@ void Game::playerMove(int x, int y, string dir){
 	}
 
 	else if(grid[newX][newY].isWalkable() && !grid[newX][newY].isFilled()){
-		grid[newX][newY].addPlayer(grid[player.x][player.y].getPlayer());
+		grid[newX][newY].addPlayer(curP);
 		grid[player.x][player.y].removePlayer();
 		msg = "You moved " + getDir(dir);
 		
@@ -294,11 +295,10 @@ void Game::playerMove(int x, int y, string dir){
 
 void Game::playerAttack(int x, int y){
 	shared_ptr <Enemy> temp = grid[player.x+x][player.y+y].getEnemy();
-	shared_ptr <Player> p = grid[player.x][player.y].getPlayer();
 
 	//if target cell has an enemy
 	if(temp != nullptr){
-		int damage = ceil((100.0/(100+temp->getDef()))*p->getCurInfo().atk);
+		int damage = ceil((100.0/(100+temp->getDef()))*curP->getCurInfo().atk);
 		temp->addHp(-1*damage); //player deals dmg to enemy
 		msg = "You dealt " + to_string(damage) + " damage to an adorable " + temp->getRace(); //update game msg
 		msg += " Enemy's current hp is " + temp->getHp();
@@ -341,7 +341,7 @@ void Game::playerAttack(int x, int y){
 			}
 			else{ //all other enemies
 				msg += " You gained 1 gold~";
-				p->addGold(temp->getValue());
+				curP->addGold(temp->getValue());
 
 				//check if enemy has the compass
 				if(temp->getCompass()){
@@ -371,7 +371,7 @@ void Game::playerConsume(int x, int y){
 
 	//if target cell has a potion
 	if(temp != nullptr){
-		grid[player.x][player.y].getPlayer()->usePotion(temp);
+		curP->usePotion(temp);
 		msg = "You just consumed a " + temp->potionInfo();
 
 		//modifies display
@@ -381,7 +381,7 @@ void Game::playerConsume(int x, int y){
 		//remove
 		grid[player.x+x][player.y+y].removePotion();
 
-		if(grid[player.x][player.y].getPlayer()->isDead()){
+		if(curP->isDead()){
 			gameStatus = false;
 		}
 	}
@@ -395,12 +395,11 @@ void Game::playerConsume(int x, int y){
 
 void Game::playerCollect(int x, int y, string dir){
 	shared_ptr<Treasure> temp = grid[player.x+x][player.y+y].getTreasure();
-	shared_ptr<Player> p = grid[player.x][player.y].getPlayer();
 
 	if(temp != nullptr && temp->isCollectable()){ //could be gold, barrier suit, or compass
 
 		if(temp->isSuit()){
-			p->suitToggle();
+			curP->suitToggle();
 			msg = "You are now equipped with the Barrier Suit";
 		}
 		else if(temp->isCompass()){
@@ -408,7 +407,7 @@ void Game::playerCollect(int x, int y, string dir){
 			msg = "You have acquired a Compass! Stairs to the next floor are now showing.";
 		}
 		else{	
-			p->addGold(temp->getValue());
+			curP->addGold(temp->getValue());
 			msg = "You have acquired " + to_string(temp->getValue()) + " gold!";
 		}
 
@@ -427,7 +426,6 @@ void Game::playerCollect(int x, int y, string dir){
 //enemy specific methods
 bool Game::enemyRadiusCheck(Position e){
 
-	shared_ptr<Player> p = grid[player.x][player.y].getPlayer();
 	shared_ptr <Enemy> temp = grid[e.x][e.y].getEnemy();
 
 	if(temp == nullptr) return false;
@@ -444,7 +442,7 @@ bool Game::enemyRadiusCheck(Position e){
 
 	//check if player is around enemy
 	if(abs(player.x-e.x)<= 1 && abs(player.y-e.y) <= 1){
-		int n = temp->attack(p); //enemy attacks
+		int n = temp->attack(curP); //enemy attacks
 	
 		if(n == 0)
 			msg += temp->getRace() + " missed!";
@@ -452,7 +450,7 @@ bool Game::enemyRadiusCheck(Position e){
 			msg += temp->getRace() + " dealt " + to_string(n) + " damage to you.";
 		
 		//if player is dead
-		if(p->isDead()){
+		if(curP->isDead()){
 			gameStatus = false;
 		}
 
@@ -518,15 +516,13 @@ bool Game::radiusHoardCheck(shared_ptr<Enemy> d) {
 ostream &operator<<(ostream &out, Game &g){
 	out << *(g.td) <<endl;
 
-	shared_ptr <Player> temp = g.grid[g.player.x][g.player.y].getPlayer();
-
 	//add the 5 lines displaying relevant info
-	out << "Race: " << temp->getRace() << " ";
-	out << "Gold: " << temp->getGold();
+	out << "Race: " << g.curP->getRace() << " ";
+	out << "Gold: " << g.curP->getGold();
 	out << "             Floor " << g.floorCount << endl;
-	out << "HP: " << temp->getCurInfo().hp << endl;
-	out << "Atk: " << temp->getCurInfo().atk << endl;
-	out << "Def: " << temp->getCurInfo().def << endl;
+	out << "HP: " << g.curP->getCurInfo().hp << endl;
+	out << "Atk: " << g.curP->getCurInfo().atk << endl;
+	out << "Def: " << g.curP->getCurInfo().def << endl;
 	out << "Action: " << g.msg << endl;
 
 	return out;

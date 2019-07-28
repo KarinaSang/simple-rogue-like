@@ -79,6 +79,7 @@ int main(int argc, char *argv[]){
 		else if(cmd == "r"){
 			you = nullptr;
 			//setting up player race
+			cin >> cmd;
 			try{
 				if(cmd == "h"){
 					you = (make_shared <BasicPlayer> ());
@@ -107,6 +108,7 @@ int main(int argc, char *argv[]){
 			}
 
 			game.reset(you);
+			cout << game;
 
 		}		
 		else if(cmd == "u"){
@@ -142,6 +144,7 @@ int main(int argc, char *argv[]){
 			else if(cmd == "r"){ //restarting the game
 				you = nullptr;
 				//setting up player race
+				cin >> cmd;
 				try{
 					if(cmd == "h"){
 						you = (make_shared <BasicPlayer> ());
@@ -170,6 +173,7 @@ int main(int argc, char *argv[]){
 				}
 
 				game.reset(you);
+				cout << game;
 
 			}
 			else return 1;
