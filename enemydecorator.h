@@ -7,10 +7,8 @@ class EnemyDecorator : public Enemy {
 	shared_ptr <Enemy> enemy;
 
 	public:
-	EnemyDecorator(shared_ptr <Enemy> enemy) : enemy{enemy} {}
-	virtual ~EnemyDecorator();
-	
-	virtual void specialAbility() = 0;
+	EnemyDecorator(shared_ptr <Enemy>);
+//	virtual void specialAbility() = 0;
 };
 
 #endif

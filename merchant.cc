@@ -1,10 +1,6 @@
 #include "merchant.h"
 
-Merchant::Merchant (){
-	info.hp = 30;
-	info.atk = 70;
-	info.def = 5;
+Merchant::Merchant (): Enemy{30, 70, 5, "Merchant", 'M'}{
 	value = 4;
-	display = 'M';
 }
 

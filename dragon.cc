@@ -1,11 +1,6 @@
 #include "dragon.h"
 
-Dragon::Dragon(shared_ptr <Cell> t) : treasure{t} {
-	info.hp = 150;
-	info.atk = 20;
-	info.def = 20;
-	race = "Dragon";
-	display = 'D';
+Dragon::Dragon(shared_ptr <Cell> t) : Enemy{150, 20, 20, "Dragon", 'D'}, treasure{t} {
 	value = 0;
 }
 

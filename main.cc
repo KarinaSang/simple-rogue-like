@@ -15,12 +15,16 @@ int main(int argc, char *argv[]){
 		return 1;
 	}
 
+	ifstream myfile {argv[1]};
+
 	//game essentials
+	
 	shared_ptr <Player> you;
 	
 	string cmd;
 	//setting up player race
 	try{
+		cin >> cmd;
 		if(cmd == "h"){
 			you = (make_shared <BasicPlayer> ());
 		}
@@ -49,13 +53,15 @@ int main(int argc, char *argv[]){
 
 	//creating gameboard from file, five floors
 	Game game{you};
+	game.floorplan.resize(game.TOTALFLOOR);
 	
-	ifstream myfile {argv[1]};
 
 	for(int i = 0; i < game.TOTALFLOOR; ++i){
-		myfile >> noskipws >> game.floorplan[i];
+		myfile >> game.floorplan[i];
 		game.floorplan[i].setFloor(i+1);
+		cout << game.floorplan[i];
 	}
+	myfile.close();
 
 	game.setDisplay(make_shared <TextDisplay> (game.floorplan[0]));
 	game.init();

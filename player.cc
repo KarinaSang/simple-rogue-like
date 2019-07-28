@@ -1,5 +1,7 @@
 #include "player.h"
 
+Player::Player(){}
+
 void Player::resetPlayer(){
 	curInfo.atk = defaultInfo.atk;
 	curInfo.def = defaultInfo.def;

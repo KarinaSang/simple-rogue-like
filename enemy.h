@@ -22,8 +22,7 @@ class Enemy{
 	char display;
 
 	public:
-	virtual ~Enemy();
-
+	Enemy(int hp, int atk, int def, string race, char display);
 	//getter methods
 	int getHp() {return info.hp;}
  	int getAtk() {return info.atk;}
@@ -42,7 +41,7 @@ class Enemy{
 	void setCompass(){hasCompass = true;}
 
 	int randNum();
-	virtual void specialAbility(shared_ptr<Player>); //CAN IMPLEMENT stealing health/gold from a player
+//	virtual void specialAbility(shared_ptr<Player>); //CAN IMPLEMENT stealing health/gold from a player
 	virtual int attack(shared_ptr<Player>);
 	virtual shared_ptr <Cell> getTreasure(); //dragon will implement this
 };
