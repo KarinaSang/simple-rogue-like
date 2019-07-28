@@ -278,7 +278,9 @@ void Game::playerMove(int x, int y, string dir){
 		//modifies display
 		td->setChar(player.x, player.y, grid[player.x][player.y].getDisplay());
 		td->setChar(newX, newY, '@');
-
+		
+		cerr << "plaer old: " << player.x << player.y << endl;
+		cerr << "player new: " << newX << newY << endl;	
 		//update player position in game
 		player.x = newX;
 		player.y = newY;
@@ -294,9 +296,10 @@ void Game::playerAttack(int x, int y){
 
 	//if target cell has an enemy
 	if(temp != nullptr){
-		int damage = ceil((100/(100+temp->getDef()))*p->getCurInfo().atk);
+		int damage = ceil((100.0/(100+temp->getDef()))*p->getCurInfo().atk);
 		temp->addHp(-1*damage); //player deals dmg to enemy
 		msg = "You dealt " + to_string(damage) + " damage to an adorable " + temp->getRace(); //update game msg
+		msg += " Enemy's current hp is " + temp->getHp();
 
 		//check if enemy is dead and remove it from the game board
 		if(temp->isDead()){ //three cases, dragon, merchant, other enemies
@@ -424,6 +427,11 @@ bool Game::enemyRadiusCheck(Position e){
 	
 	//check if the dragon should be hostile
 	if (temp->getDisplay() == 'D' && !radiusHoardCheck(temp)) {
+		return false;
+	}
+
+	//check if merchant should attack
+	if(temp->getDisplay() == 'M' && !mHostility){
 		return false;
 	}
 

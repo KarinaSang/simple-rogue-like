@@ -120,11 +120,12 @@ int main(int argc, char *argv[]){
 		}	
 		else{ //move the player
 			Position temp = game.getPos(cmd);
+			cerr << "dir" << temp.x << temp.y << endl;
 			game.playerMove(temp.x, temp.y, cmd);
 		}
 		
 		//enemy attacks or moves
-		for(auto e : game.getEnemy()){
+		for(auto &e : game.getEnemy()){
 			if(!game.enemyRadiusCheck(e)){
 				game.generateEnemyMove(e);
 			}
