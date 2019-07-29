@@ -38,7 +38,7 @@ int main(int argc, char *argv[]){
 		}
 		else if(cmd == "o"){
 			you = (make_shared <BasicPlayer> (180, 30, 25));
-			you = make_shared <OrcDecorator> (you);
+		//	you = make_shared <OrcDecorator> (you);
 		}
 		else if(cmd == "q"){
 			return 0;
@@ -75,6 +75,9 @@ int main(int argc, char *argv[]){
 			//display something
 			return 0;
 
+		}
+		else if(cmd == "next"){
+			game.nextFloor();
 		}
 		else if(cmd == "r"){
 			you = nullptr;
@@ -134,8 +137,10 @@ int main(int argc, char *argv[]){
 			}
 		}
 
+		cout << game;
+
 		//check the current game status
-			cout << game;
+		
 		if(!game.getStatus()){
 			cout << "Game over. Please enter 'q' to quit or 'r' to restart" << endl;
 			cin >> cmd;

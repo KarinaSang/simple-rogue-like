@@ -2,102 +2,121 @@
 
 TextDisplay::TextDisplay(){}
 
-int TextDisplay::random(int x, int y){
-	srand(time(0));
-	return rand()%y+x;
-}
-
 Position TextDisplay::randPos(){
-	int x = random(2, BOARDHEIGHT-4);
-	int y = random(1, BOARDWIDTH-2);
+	int n = rand()%posV.size();
+	Position temp = posV[n];
+	posV.erase(posV.erase(posV.begin()+n));
 
-//	bool check = true;
+	return temp;
 
-//	while(check){
-//		check = false;
-		
-//		for(int i = -1; i <= 1; ++i){
-//			for(int j = -1; j <= 1; ++j){
-//				cerr << x+i << " " << y+j << endl;
-//				if(theDisplay[x+i][y+j] != '.'){
-//					check = true;
-//					break;
-//				}
-//			}
-//		}
+}
 
-//		if(check == false) break;
-
-//		x = random(1, BOARDHEIGHT-2);
-//		y = random(1, BOARDWIDTH-2);
-//	}
+bool TextDisplay::floodFill(vector <Position> &v, vector<vector<bool>> &visited, int x, int y){
 	
-	while(theDisplay[x][y] != '.'){
-		x = random(2, BOARDHEIGHT-3);
-		y = random(1, BOARDWIDTH-2);
+	if(visited[x][y])
+		return true;
+	else if(theDisplay[x][y] == '|' || theDisplay[x][y] == '-')
+		return true;
+	else if(theDisplay[x][y] == '@')
+		return false;
+
+	visited[x][y] = true;
+	
+	if(theDisplay[x][y] == '.'){ //if marked generatable before
+		v.erase(find(v.begin(),v.end(), Position{x, y}));
 	}
+	
+	if(floodFill(v, visited, x+1, y) &&
+			floodFill(v, visited, x-1, y) &&
+			floodFill(v, visited, x, y+1) &&
+			floodFill(v, visited, x, y-1))
+		return true;
 
-	cerr << x << " " << y << endl;
-
-	return Position{x, y};
+	return false;	
 }
 
 
-void TextDisplay::generateStairs(){
-	Position p = randPos();
-	
-	//TODO: stairs in same room as player
+void TextDisplay::generateStairs(vector <Position> tempV){
+	int n = rand()%tempV.size();
 
-	theDisplay[p.x][p.y] = '\\';
+	vector<vector<bool>> visited (BOARDHEIGHT, vector<bool>(BOARDWIDTH, false));
+
+	while(!floodFill(tempV, visited, tempV[n].x, tempV[n].y)){
+		n = rand()%tempV.size();
+	}
+
+
+	theDisplay[tempV[n].x][tempV[n].y] = '\\';
+	posV.erase(find(posV.begin(), posV.end(), tempV[n]));
 	++stairsCount;
+	cerr << "end stair" << endl;
 }
 
-void TextDisplay::generateDragon(int r, int c){
-	int x = random(-1, 3);
-	int y = random(-1, 3);
+bool TextDisplay::generateDragon(int r, int c){
+	vector <Position> tempDir = dir;
+	int randN = rand()%tempDir.size();
 
-	while(x == 0 && y == 0){
-		y = random(-1, 3);
+	Position p = tempDir[randN];
+
+	auto n = find(posV.begin(), posV.end(), Position{r+p.x, c+p.y});	
+
+	while(n == posV.end()){
+		tempDir.erase(tempDir.begin()+randN);
+
+		if(tempDir.empty()){
+			return false;
+		}
+
+		randN = rand()%tempDir.size();
+		p = tempDir[randN];
+		n = find(posV.begin(), posV.end(), Position{r+p.x, c+p.y});
 	}
 
-	theDisplay[r+x][c+y] = 'D';
+	theDisplay[r+p.x][c+p.y] = 'D';
+	posV.erase(n);
 	++enemyCount;
+	return true;
 }
+
+
 
 void TextDisplay::generate(int floor){
 	//generating in order....
-	Position p;
-	cerr << "playerC " << playerCount << " potionCount " << potionCount << "TreasureCount  " << treasureCount << " EnemyCount " << enemyCount << endl;
+
 	//player
 	if(playerCount == 0){
 		++playerCount;
-		p = randPos();
+		Position p = randPos();
 		theDisplay[p.x][p.y] = '@';
 	}
 	//stairs
 	if(stairsCount == 0){
-		generateStairs();
+		generateStairs(posV);
 	}
 	
 	//potions
 	while(potionCount < TOTALPOTION){
-		p = randPos();
-		theDisplay[p.x][p.y] = '0' + random(0, 6);
+		Position p = randPos();
+		theDisplay[p.x][p.y] = '0' + rand()%6;
 		++potionCount;
 	}
 
 	//treasure
 	//barrier suit
 	if(floorNumber == floor && treasureCount == 0){
-		p = randPos();
+		Position p = randPos();
+
+		while(!generateDragon(p.x, p.y)){
+			p = randPos();
+		}
+
 		theDisplay[p.x][p.y] = 'B';
-		generateDragon(p.x, p.y);
 		++treasureCount;
 	}
 
 	while(treasureCount < TOTALTREASURE){
-		p = randPos();
-		int n = random(0, 8);
+		Position p = randPos();
+		int n = rand()%8;
 
 		if(n >= 0 && n <= 4){ //0,1,2,3,4 -> normal gold
 			theDisplay[p.x][p.y] = '6';
@@ -106,8 +125,12 @@ void TextDisplay::generate(int floor){
 			theDisplay[p.x][p.y] = '7';
 		}
 		else{ //dragon hoard
+			
+			while(!generateDragon(p.x, p.y)){
+				p = randPos();
+			}
+
 			theDisplay[p.x][p.y] = '9';
-			generateDragon(p.x, p.y);
 		}
 		
 		++treasureCount;
@@ -115,8 +138,9 @@ void TextDisplay::generate(int floor){
 
 	//enemies
 	while(enemyCount < TOTALENEMY){
-		p = randPos();
-		int n = random(0, 18);
+		Position p = randPos();
+		int n = rand()%18;
+
 		char e = 'E';
 
 		if(n >= 0 && n <= 2){ //vampire
@@ -140,7 +164,9 @@ void TextDisplay::generate(int floor){
 		
 		theDisplay[p.x][p.y] = e;
 		++enemyCount;
-	}	
+	}
+
+	cerr << *this << endl;
 	
 }
 
@@ -150,12 +176,12 @@ istream &operator>> (istream&in, TextDisplay &td){
 	char c;
 	td.theDisplay.resize(td.BOARDHEIGHT);
 
-	for(int m = 0; m < td.BOARDHEIGHT; ++m){
-		td.theDisplay[m].resize(td.BOARDWIDTH+1);
+	for(int i = 0; i < td.BOARDHEIGHT; ++i){
+		td.theDisplay[i].resize(td.BOARDWIDTH+1);
 
-		for(int n = 0; n < td.BOARDWIDTH; ++n){
+		for(int j = 0; j < td.BOARDWIDTH; ++j){
 			in >> noskipws >> c;
-			td.theDisplay[m][n] = c;
+			td.theDisplay[i][j] = c;
 
 			//checks what the input is
 			if(c == '\\'){
@@ -169,7 +195,7 @@ istream &operator>> (istream&in, TextDisplay &td){
 			}
 			else if(c-'0' >= 6 && c-'0' <= 9){
 			       if(c-'0' == 8){//if merchant hoard
-				       td.theDisplay[m][n] = 'M';
+				       td.theDisplay[i][j] = 'M';
 				       ++td.enemyCount;
 			       }
 			       else{
@@ -182,6 +208,9 @@ istream &operator>> (istream&in, TextDisplay &td){
 			else if (c == 'V' || c == 'W' || c == 'N' || c == 'D' ||
 					c == 'X' || c == 'T' || c == 'M'){
 			       	++td.enemyCount;	
+			}
+			else if(c == '.'){ //this is available for random generation
+				td.posV.emplace_back(Position{i,j});
 			}
 		}
 		in >> noskipws >> c; //new line character

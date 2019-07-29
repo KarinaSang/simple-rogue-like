@@ -7,11 +7,12 @@
 Game::Game(shared_ptr <Player> p): curP{p} {
 	srand(time(0));
 	suitFloor = rand()%5+1;
+	cerr << suitFloor << endl;
 }
 
 
 void Game::init(){	
-//	td->generate(suitFloor); //RANDOM GENERATION OF THE BOARD
+	td->generate(suitFloor); //RANDOM GENERATION OF THE BOARD
 	grid.clear();
 	grid.resize(BOARDHEIGHT);
 
@@ -30,11 +31,11 @@ void Game::init(){
 				case '#':
 				case '.':
 				case 'B':{
-						 grid[i][j].setDisplay(curChar);
-						 break;
+					grid[i][j].setDisplay(curChar);
+					break;
 					 }
 				case '9':{
-						break;
+					break;
 					 }
 				case '@':{ //player
 					grid[i][j].addPlayer(curP);
@@ -96,7 +97,7 @@ void Game::init(){
 								if(td->getChar(i+a, j+b) == 'B'){
 									t->setSuit();
 								}
-
+								
 								grid[i+a][j+b].addTreasure(t); //add treasure to cell
 
 								if(td->getChar(i+a, j+b) == '9'){
@@ -107,7 +108,7 @@ void Game::init(){
 								grid[i][j].addEnemy(d);
 								enemy.emplace_back(Position {i,j});
 
-								cerr << d->getTreasure().x << d->getTreasure().y << endl;
+								cerr << d->getTreasure().x << " " <<  d->getTreasure().y << endl;
 							}
 						}
 					}
@@ -169,16 +170,14 @@ void Game::init(){
 	}
 
 	//generate the enemy that holds the Compass
-	srand(time(0));
 	int n = (rand() % td->enemyCount);
-	Position pos{enemy[n]};
 
-	while(td->getChar(pos.x, pos.y) == 'D'){
+	while(td->getChar(enemy[n].x, enemy[n].y) == 'D'){
 		n = (rand()% td->enemyCount);
-		pos = enemy[n];
 	}
 
-	grid[pos.x][pos.y].getEnemy()->setCompass();
+	grid[enemy[n].x][enemy[n].y].getEnemy()->setCompass();
+
 }
 
 
@@ -191,7 +190,6 @@ void Game::reset (shared_ptr <Player> p){
 	suitEquipped = false;
 	mHostility = false;
 
-	srand(time(nullptr));
 	suitFloor = rand()%5+1;
 
 	curP = p;

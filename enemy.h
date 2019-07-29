@@ -21,10 +21,10 @@ class Enemy{
 	int value = 1;
 	string race;
 	char display;
-	Position treasure {0, 0};
+	Position treasure;
 
 	public:
-	Enemy(int hp, int atk, int def, string race, char display);
+	Enemy(int hp, int atk, int def, string race, char display, Position p = {0,0});
 	//getter methods
 	int getHp() {return info.hp;}
  	int getAtk() {return info.atk;}
@@ -34,6 +34,7 @@ class Enemy{
 	char getDisplay(){return display;}
 	bool getCompass() {return hasCompass;}
 	bool isDead(){return info.hp == 0;}
+	Position getTreasure(){return treasure;}
 
 	//setter methods(might not need to modify enemy's base ratio)
 	void addHp(int n) {
@@ -49,9 +50,6 @@ class Enemy{
 	int randNum();
 //	virtual void specialAbility(shared_ptr<Player>); //CAN IMPLEMENT stealing health/gold from a player
 	virtual int attack(shared_ptr<Player>);
-	Position getTreasure(){ //dragon will implement this
-		return treasure;
-	}
 };
 
 
