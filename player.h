@@ -25,7 +25,7 @@ class Player{
 	Player();
 
 	//getter methods
-	CharacterInfo getCurInfo(){return curInfo;}
+	virtual CharacterInfo getCurInfo(){return curInfo;}
 	CharacterInfo getDefaultInfo() {return defaultInfo;}
 	string getRace() {return race;}
 	bool hasSuit() {return suitEquipped;}

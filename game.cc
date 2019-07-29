@@ -176,6 +176,7 @@ void Game::init(){
 		n = (rand()% td->enemyCount);
 	}
 
+	cerr << "Enemy with compass: " << enemy[n].x << " " << enemy[n].y << endl;
 	grid[enemy[n].x][enemy[n].y].getEnemy()->setCompass();
 
 }
@@ -208,6 +209,7 @@ void Game::nextFloor(){
 		return;
 	}
 
+	mHostility = false;
 	++floorCount;
 	td = make_shared <TextDisplay> (floorplan[floorCount-1]);
 	enemy.clear();
