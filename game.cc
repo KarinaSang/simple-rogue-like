@@ -378,6 +378,10 @@ void Game::playerConsume(int x, int y){
 		td->setChar(player.x, player.y, '.');
 		td->setChar(player.x+x, player.y+y, '@');
 		
+		//update player position in game
+		player.x+=x;
+		player.y+=y;
+
 		//remove
 		grid[player.x+x][player.y+y].removePotion();
 
