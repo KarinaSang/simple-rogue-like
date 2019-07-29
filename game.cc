@@ -176,6 +176,7 @@ void Game::init(){
 		n = (rand()% td->enemyCount);
 	}
 
+	cerr << "Enemy with compass: " << enemy[n].x << " " << enemy[n].y << endl;
 	grid[enemy[n].x][enemy[n].y].getEnemy()->setCompass();
 
 }
