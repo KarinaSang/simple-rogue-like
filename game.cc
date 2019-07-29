@@ -208,6 +208,7 @@ void Game::nextFloor(){
 		return;
 	}
 
+	mHostility = false;
 	++floorCount;
 	td = make_shared <TextDisplay> (floorplan[floorCount-1]);
 	enemy.clear();
