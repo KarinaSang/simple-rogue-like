@@ -5,3 +5,4 @@
 - test merchant hostility
 - check todos
 - turn on random generation before submitting
+- change humann default attack back
