@@ -1,7 +1,7 @@
 #include "enemy.h"
 #include "player.h"
 
-Enemy::Enemy(int hp, int atk, int def, string race, char display):
+Enemy::Enemy(int hp, int atk, int def, string race, char display, Position p):
 	race{race}, display{display}{
 		info.hp = hp;
 		info.atk = atk;
@@ -11,7 +11,6 @@ Enemy::Enemy(int hp, int atk, int def, string race, char display):
 
 int Enemy::attack(shared_ptr <Player> p){
 	//implement 50%of missing the attack
-	srand(time(0));
 	int randNum = rand() % 2;
 
 	if(randNum == 0){	
@@ -32,7 +31,6 @@ int Enemy::attack(shared_ptr <Player> p){
 
 
 int Enemy::randNum() {
-	srand(time(0));
 	int n = (rand() % 3);
 	if (n == 0) return -1;
 	if (n == 1) return 0;

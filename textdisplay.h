@@ -3,12 +3,17 @@
 #include <iostream>
 #include <vector>
 #include <ctime>
+#include <algorithm>
 #include "position.h"
 
 using namespace std;
 
 class TextDisplay{
-//	vector<vector<char>> theDisplay;
+	vector<vector<char>> theDisplay;
+	vector <Position> posV; //store positions available for random generation
+
+	vector <Position> dir {{0, 1}, {1, 0}, {0,-1}, {-1,0},
+		{1,1}, {-1,1}, {1,-1}, {-1,-1}}; //list of directions
 
 	const int BOARDWIDTH = 79;
 	const int BOARDHEIGHT = 25;
@@ -26,14 +31,13 @@ class TextDisplay{
 	friend class Game;
 
 	public:
-	vector <vector<char>> theDisplay;
 
 	TextDisplay();
+	Position randPos(); //randomly generate a position
 	void generate(int floor);
-	void generateStairs();
-	void generateDragon(int, int);
-	Position randPos();
-	int random(int x, int y);//x, y indicating the range
+	void generateStairs(vector<Position>);
+	bool floodFill(vector<Position>&, vector<vector<bool>>&, int, int);
+	bool generateDragon(int, int);
 	
 	//getter
 	char getChar(int row, int col) {return theDisplay[row][col];}
