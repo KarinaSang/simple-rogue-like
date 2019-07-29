@@ -7,7 +7,8 @@
 
 class Dragon : public Enemy {
 	public:
-	Dragon(Position);
+	Dragon(int x, int y);
+	Position getTreasure(){ return Enemy::getTreasure();}
 };
 
 #endif

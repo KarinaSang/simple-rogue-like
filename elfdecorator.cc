@@ -1,9 +1,9 @@
 #include "elfdecorator.h"
 
 void ElfDecorator::usePotion(shared_ptr <Potion> p){
-	curInfo.hp += abs(p->getHp());
-	if(curInfo.hp > defaultInfo.hp) curInfo.hp = defaultInfo.hp;
+	shared_ptr<Player> temp = PlayerDecorator::getPlayer();
 
-	curInfo.atk += abs(p->getAtk());
-	curInfo.def += abs(p->getDef());
+	temp->addHp(abs(p->getHp()));
+	temp->addAtk(abs(p->getAtk()));
+	temp->addDef(abs(p->getDef()));
 }

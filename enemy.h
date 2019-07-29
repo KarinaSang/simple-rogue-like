@@ -16,7 +16,7 @@ class Cell;
 class Enemy{
 	bool hasCompass = false;
 
-	protected:
+
 	CharacterInfo info;
 	int value = 1;
 	string race;
@@ -24,9 +24,9 @@ class Enemy{
 	Position treasure;
 
 	public:
-	Enemy(int hp, int atk, int def, string race, char display, Position p = {0,0});
+	Enemy(int hp, int atk, int def, string race, char display, int x = 0, int y = 0);
 	//getter methods
-	int getHp() {return info.hp;}
+	virtual int getHp() {return info.hp;}
  	int getAtk() {return info.atk;}
 	int getDef() {return info.def;}
 	int getValue() {return value;}
@@ -34,7 +34,7 @@ class Enemy{
 	char getDisplay(){return display;}
 	bool getCompass() {return hasCompass;}
 	bool isDead(){return info.hp == 0;}
-	Position getTreasure(){return treasure;}
+	virtual Position getTreasure(){return treasure;}
 
 	//setter methods(might not need to modify enemy's base ratio)
 	void addHp(int n) {

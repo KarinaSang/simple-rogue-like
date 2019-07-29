@@ -48,9 +48,9 @@ class Cell{
 
 	//when a gold/potion is collected/consumed, or when a player/enemy moves/dies
 	void removePlayer(){player = nullptr;}
-	void removeEnemy(){enemy = nullptr; display = '.';}
-	void removePotion(){potion = nullptr; display = '.';}
-	void removeTreasure(){treasure = nullptr; display = '.';}
+	void removeEnemy(){enemy = nullptr;}
+	void removePotion(){potion = nullptr;}
+	void removeTreasure(){treasure = nullptr;}
 
 	bool isFilled(); //check if the current cell is occupied
 	bool isStairs(); //check if the current cell is the stairs
