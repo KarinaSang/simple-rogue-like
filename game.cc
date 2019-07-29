@@ -7,7 +7,6 @@
 Game::Game(shared_ptr <Player> p): curP{p} {
 	srand(time(0));
 	suitFloor = rand()%5+1;
-	cerr << suitFloor << endl;
 }
 
 
@@ -103,11 +102,12 @@ void Game::init(){
 								if(td->getChar(i+a, j+b) == '9'){
 									td->setChar(i+a, j+b, 'G'); //set textdisplay back to G
 								}
-
-								shared_ptr<Enemy> d = make_shared<Dragon>(Position {i+a, j+b}); //create dragon guarding dragon hoard
+								
+								shared_ptr<Enemy> d = make_shared<Dragon>(i+a, j+b); //create dragon guarding dragon hoard
 								grid[i][j].addEnemy(d);
 								enemy.emplace_back(Position {i,j});
-
+								
+								cerr << i+a << j+b << endl;
 								cerr << d->getTreasure().x << " " <<  d->getTreasure().y << endl;
 							}
 						}
@@ -188,7 +188,6 @@ void Game::reset (shared_ptr <Player> p){
 	td = make_shared <TextDisplay> (floorplan[0]);
 	msg = "You have spawned!";
 	floorCount = 1;
-	suitEquipped = false;
 	mHostility = false;
 
 	suitFloor = rand()%5+1;
@@ -253,8 +252,7 @@ Position Game::getPos(string dir) {
 	else if (dir == "se") return Position {1, 1};
 	else if (dir == "sw") return Position {1, -1};
 	else {
-		//TODO: COULD THROW AN EXCEPTION
-		return Position {0,0};
+		throw InvalidMove{};
 	}
 }
 
@@ -288,6 +286,10 @@ void Game::playerMove(int x, int y, string dir){
 		player.x = newX;
 		player.y = newY;
 	}
+
+	else{
+		throw InvalidMove{};
+	}
 }
 
 
@@ -303,6 +305,8 @@ void Game::playerAttack(int x, int y){
 		msg = "You dealt " + to_string(damage) + " damage to an adorable " + temp->getRace(); //update game msg
 		msg += " Enemy's current hp is " + temp->getHp();
 
+		cerr << temp->getHp();
+
 		//check if enemy is dead and remove it from the game board
 		if(temp->isDead()){ //three cases, dragon, merchant, other enemies
 			msg += " and you KILLED it!";
@@ -311,8 +315,6 @@ void Game::playerAttack(int x, int y){
 			if(temp->getRace() == "Dragon"){
 				Position tempT = temp->getTreasure();
 				
-				cerr << "dragon hoard " << tempT.x << tempT.y << endl;
-
 				//the dragon hoard/barrier suit is now collectable
 				grid[tempT.x][tempT.y].getTreasure()->setCollectable();
 				msg += " The dragon hoard is now collectable!";
@@ -357,8 +359,7 @@ void Game::playerAttack(int x, int y){
 		}
 	}
 	else{
-		cerr << "Invalid Move" << endl;
-		//could throw an exception
+		throw InvalidMove{};
 	}
 			
 }
@@ -375,13 +376,8 @@ void Game::playerConsume(int x, int y){
 		msg = "You just consumed a " + temp->potionInfo();
 
 		//modifies display
-		td->setChar(player.x, player.y, '.');
-		td->setChar(player.x+x, player.y+y, '@');
+		td->setChar(player.x+x, player.y+y, '.');
 		
-		//update player position in game
-		player.x+=x;
-		player.y+=y;
-
 		//remove
 		grid[player.x+x][player.y+y].removePotion();
 
@@ -390,8 +386,7 @@ void Game::playerConsume(int x, int y){
 		}
 	}
 	else{
-		cerr << "Invalid Move!" << endl;
-		//could throw an exception
+		throw InvalidMove{};
 	}	
 }
 
@@ -471,25 +466,31 @@ void Game::generateEnemyMove(Position &e){
 
 	if (temp->getDisplay() == 'D') return;
 
-	while(true){	
-		int x = temp->randNum();
-		int y = temp->randNum();
+	
+	vector<Position> tempDir {{0, 1}, {1, 0}, {0,-1}, {-1,0},
+		{1,1}, {-1,1}, {1,-1}, {-1,-1}};
+	int randN = rand()%tempDir.size();
 
-		while (x == 0 && y == 0){ //enemy must move
-			y = temp->randNum();
-			x = temp->randNum();
+	int newX = e.x+tempDir[randN].x;
+	int newY = e.y+tempDir[randN].y;
+	
+	while(!(grid[newX][newY].getDisplay() == '.' && !grid[newX][newY].isFilled())){
+		tempDir.erase(tempDir.begin()+randN);
+		
+		if(tempDir.empty()){ //enemy is stuck
+			return;
 		}
-
-		int newX = e.x+x;
-		int newY = e.y+y;
-
-		if (grid[newX][newY].getDisplay() == '.' && !grid[newX][newY].isFilled()) {
-			enemyMove(newX, newY, e);
-			e.x = newX;
-			e.y = newY;
-			break;
-		}
+		
+		randN = rand()%tempDir.size();
+		newX = e.x+tempDir[randN].x;
+		newY = e.y+tempDir[randN].y;
 	}
+
+
+	enemyMove(newX, newY, e);
+	e.x = newX;
+	e.y = newY;
+
 
 }
 

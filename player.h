@@ -16,18 +16,17 @@ class Player{
 	//items
 	bool suitEquipped = false;
 
-	protected:
 	string race;
 	CharacterInfo curInfo;
 	CharacterInfo defaultInfo;
 
 	public:
-	Player();
+	Player(int hp, int atk, int def, string race);
 
 	//getter methods
 	virtual CharacterInfo getCurInfo(){return curInfo;}
 	CharacterInfo getDefaultInfo() {return defaultInfo;}
-	string getRace() {return race;}
+	virtual string getRace() {return race;}
 	bool hasSuit() {return suitEquipped;}
 	int getGold(){return gold;}
 
@@ -35,6 +34,7 @@ class Player{
 	void addHp(int n){
 		curInfo.hp += n;
 		if(curInfo.hp < 0) curInfo.hp = 0;
+		else if(curInfo.hp > defaultInfo.hp) curInfo.hp = defaultInfo.hp;
 	}
 	void addAtk(int n){curInfo.atk += n;}
 	void addDef(int n){curInfo.def += n;}

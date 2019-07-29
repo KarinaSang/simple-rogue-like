@@ -11,6 +11,9 @@
 
 using namespace std;
 
+class InvalidMove{ //exception handling
+};
+
 class Game{
 	vector <vector <Cell>> grid; //current floor
 
@@ -19,7 +22,6 @@ class Game{
 	bool gameStatus = true;	
 
 	int floorCount = 1; //starting with floor one
-	bool suitEquipped = false;
 	bool mHostility = false; //merchant hostility towards player
 	int suitFloor = 0; //where barrier suit could be located
 

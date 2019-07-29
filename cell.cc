@@ -4,10 +4,10 @@ Cell::Cell (int row, int col, char display) : row{row}, col{col}, display{displa
 
 
 bool Cell::isFilled(){
-	if(player!=nullptr || enemy!=nullptr || potion!=nullptr || treasure!=nullptr){
-		return true;
+	if(player ==nullptr && enemy ==nullptr && potion==nullptr && treasure==nullptr){
+		return false;
 	}
-	return false;
+	return true;
 }
 
 

@@ -1,6 +1,14 @@
 #include "player.h"
 
-Player::Player(){}
+Player::Player(int hp, int atk, int def, string race){
+	curInfo.hp = hp;
+	curInfo.atk = atk;
+	curInfo.def = def;
+	defaultInfo.hp = hp;
+	defaultInfo.atk = atk;
+	defaultInfo.def = def;
+	this->race = race;
+}
 
 void Player::resetPlayer(){
 	curInfo.atk = defaultInfo.atk;

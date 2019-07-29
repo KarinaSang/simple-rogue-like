@@ -6,6 +6,7 @@
 class BasicEnemy : public Enemy {
 	public:
 	BasicEnemy(int hp, int atk, int def, string race, char display);
+	int getHp() override{ return Enemy::getHp();}
 };
 
 #endif
