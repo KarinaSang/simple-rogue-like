@@ -16,6 +16,7 @@ class PlayerDecorator : public Player{
 	virtual bool hasSuit(){return player->hasSuit();}
 	virtual int getGold(){return player->getGold();}
 	virtual bool isDead(){return player->isDead();}
+	virtual int getScore(){return player->getGold();}
 
 	//setter
 	virtual void addHp(int n){player->addHp(n);}

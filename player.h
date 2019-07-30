@@ -29,6 +29,7 @@ class Player{
 	virtual string getRace() {return race;}
 	virtual bool hasSuit() {return suitEquipped;}
 	virtual int getGold(){return gold;}
+	virtual int getScore(){return gold;}
 
 	//setter methods
 	virtual void addHp(int n){
