@@ -86,7 +86,7 @@ int main(int argc, char *argv[]){
 	while(cin >> cmd){
 	
 		if(!game.getStatus()){ //if game is over
-			cout << "Game over! Please enter q to quit or r to restart." << endl;
+			cout << "Please enter q to quit or r to restart." << endl;
 			cin >> cmd;
 			
 			while(cmd != "q" && cmd != "r"){
@@ -98,16 +98,21 @@ int main(int argc, char *argv[]){
 		try{
 
 			if(cmd == "q"){
-				cout << "Your final score is " + to_string(you->getScore()) << endl;
 				cout << "If heroes run and hide, who will stay and fight? See you next time." << endl;
 				return 0;
 			}
 			else if(cmd == "next"){
 				game.nextFloor();
 				
-				if(!game.getStatus()){
-					cout << "You have completed all levels, press any key to continue." << endl;
+				if(game.getFloorCount() <= 5){
+					cout << game;
 				}
+				else{
+					cout << "Congradulations on completing all level! We will make the game harder next time so you die!" << endl;
+					cout << "Your final score is " + to_string(you->getScore()) << endl;
+					cout << "Please press any key to continue." << endl;
+				}
+
 			}	
 
 			else if(cmd == "r"){
@@ -121,38 +126,52 @@ int main(int argc, char *argv[]){
 				game.reset(you);
 				cout << game;
 
-			}		
-			else if(cmd == "u"){
-				cin >> cmd; //direction to use potion
-				Position temp = game.getPos(cmd);
-				game.playerConsume(temp.x, temp.y);
-
-			}	
-			else if(cmd == "a"){
-				cin >> cmd; //direction to attack
-				Position temp = game.getPos(cmd);
-				game.playerAttack(temp.x, temp.y);
-			}	
-			else{ //move the player
-				Position temp = game.getPos(cmd);
-				game.playerMove(temp.x, temp.y, cmd);
 			}
+			else{
 
-			if(game.getStatus()){
-			
-				//enemy attacks or moves
-				for(auto &e : game.getEnemy()){
-					if(!game.enemyRadiusCheck(e)){
-						game.generateEnemyMove(e);
+				if(cmd == "u"){
+					cin >> cmd; //direction to use potion
+					Position temp = game.getPos(cmd);
+					game.playerConsume(temp.x, temp.y);
+
+				}	
+				else if(cmd == "a"){
+					cin >> cmd; //direction to attack
+					Position temp = game.getPos(cmd);
+					game.playerAttack(temp.x, temp.y);
+				}	
+				else{ //move the player
+					Position temp = game.getPos(cmd);
+					game.playerMove(temp.x, temp.y, cmd);
+				}
+
+				if(game.getStatus()){
+				
+					//enemy attacks or moves
+					for(auto &e : game.getEnemy()){
+						if(!game.enemyRadiusCheck(e)){
+							game.generateEnemyMove(e);
+						}
 					}
+
+					if(you->isDead()){
+						game.setMsg2("HAHAHAHAHHAHAHA You died >:)");
+						cout << game;
+						cout << "Your final score is " + to_string(you->getScore()) << endl;
+						cout << "Please press any key to continue." << endl;
+					}
+					else{
+						cout << game; //print the game board
+					}
+					game.setMsg2(" ");
 				}
 
-				if(you->isDead()){
-					game.setMsg2("Hey, just letting you know you died >:), but press any key to continue.");
+				if(game.getFloorCount() > 5){
+					cout << "Congradulations on completing all level! We will make the game harder next time so you die!" << endl;
+					cout << "Your final score is " + to_string(you->getScore()) << endl;
+					cout << "Please press any key to continue." << endl;
 				}
-					
-				cout << game; //print the game board
-				game.setMsg2(" ");
+
 			}
 
 		} catch(InvalidInput &e){
@@ -160,8 +179,8 @@ int main(int argc, char *argv[]){
 			return 1;
 		} catch(InvalidMove &e){
 			cout << game;
-			game.setMsg(" ");
-			game.setMsg2(" ");
+			game.setMsg("");
+			game.setMsg2("");
 		}
 			
 	}	

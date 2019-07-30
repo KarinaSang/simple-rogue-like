@@ -45,7 +45,7 @@ class Enemy{
 	virtual void setValue(int n) {value = n;}
 	virtual void setCompass(){hasCompass = true;}
 
-	virtual void specialAbility(shared_ptr<Player>){} //CAN IMPLEMENT stealing health/gold from a player
+	virtual string specialAbility(shared_ptr<Player> p) {return "";} //CAN IMPLEMENT stealing health/gold from a player
 	virtual int attack(shared_ptr<Player>);
 };
 

@@ -1,9 +1,9 @@
 #ifndef ENEMYDEC_H
 #define ENEMYDEC_H
 #include "enemy.h"
+#include "player.h"
 
 class EnemyDecorator : public Enemy {
-	protected: 
 	shared_ptr <Enemy> e;
 
 	public:
@@ -27,7 +27,7 @@ class EnemyDecorator : public Enemy {
 	virtual void setValue(int n) {e->setValue(n);}
 	virtual void setCompass(){e->setCompass();}
 
-	virtual void specialAbility(shared_ptr<Player> p){e->specialAbility(p);} //CAN IMPLEMENT stealing health/gold from a player
+	virtual string specialAbility(shared_ptr<Player> p){return e->specialAbility(p);} //CAN IMPLEMENT stealing health/gold from a player
 	virtual int attack(shared_ptr<Player> p){return e->attack(p);}
 
 };

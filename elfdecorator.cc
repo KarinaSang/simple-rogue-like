@@ -1,4 +1,5 @@
 #include "elfdecorator.h"
+#include <iostream>
 
 void ElfDecorator::usePotion(shared_ptr <Potion> p){
 	this->addHp(abs(p->getHp()));
