@@ -18,7 +18,7 @@ class Game{
 	vector <vector <Cell>> grid; //current floor
 
 	shared_ptr <TextDisplay> td; //textdisplay of the game
-	string msg = "You have spawned!"; //current action msg
+	string msg = "You have spawned! "; //current action msg
 	bool gameStatus = true;	
 
 	int floorCount = 1; //starting with floor one

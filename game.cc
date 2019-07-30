@@ -13,13 +13,22 @@ Game::Game(shared_ptr <Player> p): curP{p} {
 void Game::init(){	
 	td->generate(suitFloor); //RANDOM GENERATION OF THE BOARD
 	grid.clear();
+	enemy.clear();
+	carriedPotions.clear();
+
+	//construct the grid
 	grid.resize(BOARDHEIGHT);
+	for(int i = 0; i < BOARDHEIGHT; ++i){
+		grid[i].resize(BOARDWIDTH);
+	}
 
 	for(int i = 0; i < BOARDHEIGHT; ++i){
 		for(int j = 0; j < BOARDWIDTH; ++j){
 			char curChar = td->getChar(i, j);
-
-			grid[i].emplace_back(Cell {i, j, '.'});
+			
+			grid[i][j].setRow(i);
+			grid[i][j].setCol(j);
+			grid[i][j].setDisplay('.');
 
 			//check what the current cell is
 			switch(curChar){
@@ -91,14 +100,13 @@ void Game::init(){
 						for(int b = -1; b <= 1; b++){
 							if(td->getChar(i+a, j+b) == '9'
 									|| td->getChar(i+a, j+b) == 'B'){ //found dragon hoard/barrier suit
-								shared_ptr <Treasure> t = make_shared<Treasure> (6, false); //dragon hoard
 
+								grid[i+a][j+b].addTreasure(make_shared<Treasure>(6, false)); //add treasure to cell
+								
 								if(td->getChar(i+a, j+b) == 'B'){
-									t->setSuit();
+									grid[i+a][j+b].getTreasure()->setSuit();
 								}
 								
-								grid[i+a][j+b].addTreasure(t); //add treasure to cell
-
 								if(td->getChar(i+a, j+b) == '9'){
 									td->setChar(i+a, j+b, 'G'); //set textdisplay back to G
 								}
@@ -107,8 +115,6 @@ void Game::init(){
 								grid[i][j].addEnemy(d);
 								enemy.emplace_back(Position {i,j});
 								
-								cerr << i+a << j+b << endl;
-								cerr << d->getTreasure().x << " " <<  d->getTreasure().y << endl;
 							}
 						}
 					}
@@ -153,15 +159,13 @@ void Game::init(){
 				}
 				case '6': {//normal gold
 					//change textdisplay back to G
-					shared_ptr<Treasure> tr = make_shared<Treasure>(1, true);
-					grid[i][j].addTreasure(tr);
+					grid[i][j].addTreasure(make_shared <Treasure> (1, true));
 					td->setChar(i, j, 'G');
 					break;
 				}
 				case '7': {//small hoard
 					//change textdisplay back to G
-					shared_ptr<Treasure> tr2 = make_shared<Treasure>(2, true);
-					grid[i][j].addTreasure(tr2);
+					grid[i][j].addTreasure(make_shared <Treasure> (2, true));
 					td->setChar(i, j, 'G');
 					break;
 				}
@@ -176,6 +180,10 @@ void Game::init(){
 		n = (rand()% td->enemyCount);
 	}
 
+	for(auto p : enemy){
+		cerr << p.x << " " << p.y << endl;
+	}
+
 	cerr << "Enemy with compass: " << enemy[n].x << " " << enemy[n].y << endl;
 	grid[enemy[n].x][enemy[n].y].getEnemy()->setCompass();
 
@@ -186,17 +194,13 @@ void Game::reset (shared_ptr <Player> p){
 	gameStatus = true; //game is being run again
 
 	td = make_shared <TextDisplay> (floorplan[0]);
-	msg = "You have spawned!";
+	msg = "You have spawned! ";
 	floorCount = 1;
 	mHostility = false;
-
 	suitFloor = rand()%5+1;
-
 	curP = p;
-	enemy.clear();
-	carriedPotions.clear();
 
-	init();
+	this->init();
 
 }
 
@@ -211,7 +215,7 @@ void Game::nextFloor(){
 	mHostility = false;
 	++floorCount;
 	td = make_shared <TextDisplay> (floorplan[floorCount-1]);
-	enemy.clear();
+	msg = "Welcome to level " + to_string(floorCount);
 
 	this->init();
 }
