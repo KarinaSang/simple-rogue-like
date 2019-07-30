@@ -1,14 +1,13 @@
 #ifndef DRAGON_H
 #define DRAGON_H
 #include <memory>
-#include "enemy.h"
+#include "enemydecorator.h"
 #include "cell.h"
 
 
-class Dragon : public Enemy {
+class Dragon : public EnemyDecorator {
 	public:
-	Dragon(int x, int y);
-	Position getTreasure(){ return Enemy::getTreasure();}
+	Dragon(shared_ptr <Enemy>);
 };
 
 #endif
