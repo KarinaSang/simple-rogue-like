@@ -49,7 +49,6 @@ void TextDisplay::generateStairs(vector <Position> tempV){
 	theDisplay[tempV[n].x][tempV[n].y] = '\\';
 	posV.erase(find(posV.begin(), posV.end(), tempV[n]));
 	++stairsCount;
-	cerr << "end stair" << endl;
 }
 
 bool TextDisplay::generateDragon(int r, int c){
@@ -165,8 +164,6 @@ void TextDisplay::generate(int floor){
 		theDisplay[p.x][p.y] = e;
 		++enemyCount;
 	}
-
-	cerr << *this << endl;
 	
 }
 

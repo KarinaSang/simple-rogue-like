@@ -122,37 +122,37 @@ void Game::init(){
 			  		break;
 				}
 				case '0':{ 
-					shared_ptr<Potion> rh = make_shared<Potion>(10, 0, 0);
+					shared_ptr<Potion> rh = make_shared<Potion>(10, 0, 0, true);
 					grid[i][j].addPotion(rh);
 					td->setChar(i, j, 'P');
 					break;
 				}
 				case '1': {
-					shared_ptr<Potion> ba = make_shared<Potion>(0, 5, 0);
+					shared_ptr<Potion> ba = make_shared<Potion>(0, 5, 0, true);
 					grid[i][j].addPotion(ba);
 					td->setChar(i, j, 'P');	
 					break;
 				}
 				case '2': {
-					shared_ptr<Potion> bd = make_shared<Potion>(0, 0, 5);
+					shared_ptr<Potion> bd = make_shared<Potion>(0, 0, 5, true);
 					grid[i][j].addPotion(bd);
 					td->setChar(i, j, 'P');
 					break;
 				}
 				case '3': {
-					shared_ptr<Potion> ph = make_shared<Potion>(-10, 0, 0);
+					shared_ptr<Potion> ph = make_shared<Potion>(-10, 0, 0, false);
 					grid[i][j].addPotion(ph);
 					td->setChar(i, j, 'P');
 					break;
 				}
 				case '4': {
-					shared_ptr<Potion> wa = make_shared<Potion>(0, -5, 0);
+					shared_ptr<Potion> wa = make_shared<Potion>(0, -5, 0, false);
 					grid[i][j].addPotion(wa);
 					td->setChar(i, j, 'P');	
 					break;
 				}
 				case '5': {
-					shared_ptr<Potion> wd = make_shared<Potion>(0, 0, -5);
+					shared_ptr<Potion> wd = make_shared<Potion>(0, 0, -5, false);
 					grid[i][j].addPotion(wd);
 					td->setChar(i, j, 'P');
 					break;
@@ -180,11 +180,6 @@ void Game::init(){
 		n = (rand()% td->enemyCount);
 	}
 
-	for(auto p : enemy){
-		cerr << p.x << " " << p.y << endl;
-	}
-
-	cerr << "Enemy with compass: " << enemy[n].x << " " << enemy[n].y << endl;
 	grid[enemy[n].x][enemy[n].y].getEnemy()->setCompass();
 
 }
@@ -213,9 +208,10 @@ void Game::nextFloor(){
 	}
 
 	mHostility = false;
+	curP->resetPlayer();
 	++floorCount;
 	td = make_shared <TextDisplay> (floorplan[floorCount-1]);
-	msg = "Welcome to level " + to_string(floorCount);
+	msg = "Welcome to level " + to_string(floorCount) + " ";
 
 	this->init();
 }
@@ -242,8 +238,8 @@ string Game::getDir(string dir){
 	else if(dir == "sw")
 		return "South West";
 
-	//direction is undefined, could throw an exception
-	return "";
+	msg = "You do not seem to be very good with directions :)";
+	throw InvalidMove{};
 }
 
 Position Game::getPos(string dir) {
@@ -256,6 +252,7 @@ Position Game::getPos(string dir) {
 	else if (dir == "se") return Position {1, 1};
 	else if (dir == "sw") return Position {1, -1};
 	else {
+		msg = "You do not seem to be very good with directions :)";
 		throw InvalidMove{};
 	}
 }
@@ -292,6 +289,7 @@ void Game::playerMove(int x, int y, string dir){
 	}
 
 	else{
+		msg = "You cannot move this way!!";
 		throw InvalidMove{};
 	}
 }
@@ -307,13 +305,11 @@ void Game::playerAttack(int x, int y){
 		int damage = ceil((100.0/(100+temp->getDef()))*curP->getCurInfo().atk);
 		temp->addHp(-1*damage); //player deals dmg to enemy
 		msg = "You dealt " + to_string(damage) + " damage to an adorable " + temp->getRace(); //update game msg
-		msg += " Enemy's current hp is " + temp->getHp();
-
-		cerr << temp->getHp();
+		msg += " Its current hp is " + to_string(temp->getHp()) + ". ";
 
 		//check if enemy is dead and remove it from the game board
 		if(temp->isDead()){ //three cases, dragon, merchant, other enemies
-			msg += " and you KILLED it!";
+			msg += "You KILLED an enemy! ";
 			td->setChar(player.x+x, player.y+y, '.'); //removes enemy from the display
 
 			if(temp->getRace() == "Dragon"){
@@ -321,10 +317,10 @@ void Game::playerAttack(int x, int y){
 				
 				//the dragon hoard/barrier suit is now collectable
 				grid[tempT.x][tempT.y].getTreasure()->setCollectable();
-				msg += " The dragon hoard is now collectable!";
+				msg += "The dragon hoard is now collectable! ";
 
 				if(temp->getCompass()){
-						msg+= " Dragon dropped a Compass!";
+						msg+= "Dragon dropped a Compass! ";
 						shared_ptr <Treasure> t = make_shared <Treasure> (0, true);
 						t->setCompass();
 						td->setChar(player.x+x, player.y+y, 'C'); //change the display
@@ -336,7 +332,7 @@ void Game::playerAttack(int x, int y){
 				
 				if(mHostility == false){ //if player kills merchant for the first time
 					mHostility = true;
-					msg += " You have lost the trust from merchants. All merchants will be hostile to you from now on."; //set msg
+					msg += "You have lost the trust from merchants. All merchants will be hostile to you from now on."; //set msg
 				}
 
 				shared_ptr <Treasure> tempT = make_shared <Treasure> (temp->getValue(), true); //the merchant hoard
@@ -346,12 +342,12 @@ void Game::playerAttack(int x, int y){
 
 			}
 			else{ //all other enemies
-				msg += " You gained 1 gold~";
+				msg += "You gained 1 gold~ ";
 				curP->addGold(temp->getValue());
 
 				//check if enemy has the compass
 				if(temp->getCompass()){
-					msg += " " + temp->getRace() + " dropped a Compass!";
+					msg += " " + temp->getRace() + " dropped a Compass! ";
 					shared_ptr <Treasure> t = make_shared <Treasure> (0, true);
 					t->setCompass();
 					td->setChar(player.x+x, player.y+y, 'C'); //change the display
@@ -363,6 +359,7 @@ void Game::playerAttack(int x, int y){
 		}
 	}
 	else{
+		msg = "Who are you attacking??";
 		throw InvalidMove{};
 	}
 			
@@ -377,7 +374,7 @@ void Game::playerConsume(int x, int y){
 	//if target cell has a potion
 	if(temp != nullptr){
 		curP->usePotion(temp);
-		msg = "You just consumed a " + temp->potionInfo();
+		msg = "You just consumed a " + temp->potionInfo() + " ";
 
 		//modifies display
 		td->setChar(player.x+x, player.y+y, '.');
@@ -390,6 +387,7 @@ void Game::playerConsume(int x, int y){
 		}
 	}
 	else{
+		msg = "There is nothing on the floor?? What are you trying to pick up?";
 		throw InvalidMove{};
 	}	
 }
@@ -403,15 +401,15 @@ void Game::playerCollect(int x, int y, string dir){
 
 		if(temp->isSuit()){
 			curP->suitToggle();
-			msg = "You are now equipped with the Barrier Suit";
+			msg = "You are now equipped with the Barrier Suit. ";
 		}
 		else if(temp->isCompass()){
 			td->setChar(stairs.x, stairs.y, '\\');
-			msg = "You have acquired a Compass! Stairs to the next floor are now showing.";
+			msg = "You have acquired a Compass! Stairs to the next floor are now showing. ";
 		}
 		else{	
 			curP->addGold(temp->getValue());
-			msg = "You have acquired " + to_string(temp->getValue()) + " gold!";
+			msg = "You have acquired " + to_string(temp->getValue()) + " gold! ";
 		}
 
 		//move the player to where the gold is
@@ -420,8 +418,7 @@ void Game::playerCollect(int x, int y, string dir){
 	}
 	else{
 		msg = "The treasure is not collectable at the moment";
-		//could throw an exception
-		cerr << "Invalid Move!" << endl;
+		throw InvalidMove{};
 	}
 }
 
@@ -448,9 +445,9 @@ bool Game::enemyRadiusCheck(Position e){
 		int n = temp->attack(curP); //enemy attacks
 	
 		if(n == 0)
-			msg += temp->getRace() + " missed!";
+			msg += temp->getRace() + " missed! ";
 		else
-			msg += temp->getRace() + " dealt " + to_string(n) + " damage to you.";
+			msg += temp->getRace() + " dealt " + to_string(n) + " damage to you. ";
 		
 		//if player is dead
 		if(curP->isDead()){
@@ -526,9 +523,9 @@ ostream &operator<<(ostream &out, Game &g){
 	out << *(g.td) <<endl;
 
 	//add the 5 lines displaying relevant info
-	out << "Race: " << g.curP->getRace() << " ";
+	out << "Race: " << g.curP->getRace() << "     ";
 	out << "Gold: " << g.curP->getGold();
-	out << "             Floor " << g.floorCount << endl;
+	out << "                               Floor " << g.floorCount << endl;
 	out << "HP: " << g.curP->getCurInfo().hp << endl;
 	out << "Atk: " << g.curP->getCurInfo().atk << endl;
 	out << "Def: " << g.curP->getCurInfo().def << endl;
