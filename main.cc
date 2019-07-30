@@ -98,6 +98,7 @@ int main(int argc, char *argv[]){
 		try{
 
 			if(cmd == "q"){
+				cout << "Your final score is " + to_string(you->getScore()) << endl;
 				cout << "If heroes run and hide, who will stay and fight? See you next time." << endl;
 				return 0;
 			}
@@ -113,7 +114,7 @@ int main(int argc, char *argv[]){
 				you = nullptr;
 				
 				//setting up player race
-				cout << "Please enter your race ^ ^";
+				cout << "Please enter your race ^ ^" << endl;
 				cin >> cmd;
 				you = createPlayer(cmd);
 
