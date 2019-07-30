@@ -19,6 +19,7 @@ class Game{
 
 	shared_ptr <TextDisplay> td; //textdisplay of the game
 	string msg = "You have spawned! "; //current action msg
+	string msg2 = "";
 	bool gameStatus = true;	
 
 	int floorCount = 1; //starting with floor one
@@ -55,6 +56,9 @@ class Game{
 	int calculateScore(); //calculate current score
 	string getDir(string); //returns full name of any direction
 	Position getPos(string); // returns position associated with direction
+	void setMsg(string s){msg = s;}
+	void setMsg2(string s){msg2 = s;}
+
 
 	//player associated functions
 	vector<Position> &getEnemy(){return enemy;}

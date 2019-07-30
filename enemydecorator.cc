@@ -1,5 +1,5 @@
 #include "enemydecorator.h"
 
-EnemyDecorator::EnemyDecorator(shared_ptr <Enemy> enemy) :
-	Enemy{*enemy}, enemy{enemy} {}
+EnemyDecorator::EnemyDecorator(shared_ptr <Enemy> e) :
+	Enemy{*e}, e{e} {}
 

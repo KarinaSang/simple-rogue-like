@@ -146,8 +146,13 @@ int main(int argc, char *argv[]){
 						game.generateEnemyMove(e);
 					}
 				}
-			
+
+				if(you->isDead()){
+					game.setMsg2("Hey, just letting you know you died >:), but press any key to continue.");
+				}
+					
 				cout << game; //print the game board
+				game.setMsg2(" ");
 			}
 
 		} catch(InvalidInput &e){
@@ -155,6 +160,8 @@ int main(int argc, char *argv[]){
 			return 1;
 		} catch(InvalidMove &e){
 			cout << game;
+			game.setMsg(" ");
+			game.setMsg2(" ");
 		}
 			
 	}	

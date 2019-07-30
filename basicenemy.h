@@ -5,8 +5,7 @@
 
 class BasicEnemy : public Enemy {
 	public:
-	BasicEnemy(int hp, int atk, int def, string race, char display);
-	int getHp() override{ return Enemy::getHp();}
+	BasicEnemy(int hp, int atk, int def, string race, char display, int value = 1, int x = 0, int y = 0);
 };
 
 #endif

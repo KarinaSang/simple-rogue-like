@@ -1,8 +1,8 @@
 #include "enemy.h"
 #include "player.h"
 
-Enemy::Enemy(int hp, int atk, int def, string race, char display, int x, int y):
-	race{race}, display{display}{
+Enemy::Enemy(int hp, int atk, int def, string race, char display, int value, int x, int y):
+	race{race}, display{display}, value{value}{
 		info.hp = hp;
 		info.atk = atk;
 		info.def = def;
@@ -31,10 +31,3 @@ int Enemy::attack(shared_ptr <Player> p){
 	return 0;
 }
 
-
-int Enemy::randNum() {
-	int n = (rand() % 3);
-	if (n == 0) return -1;
-	if (n == 1) return 0;
-	return 1;
-}
