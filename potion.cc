@@ -2,8 +2,8 @@
 
 using namespace std;
 
-Potion::Potion(int hp, int atk, int def) :
-	hp{hp}, atk{atk}, def{def} {}
+Potion::Potion(int hp, int atk, int def, bool effect) :
+	hp{hp}, atk{atk}, def{def}, effect{effect} {}
 
 
 string Potion::potionInfo(){
@@ -17,10 +17,9 @@ string Potion::potionInfo(){
 		return "Poison Health Potion";
 	else if(atk < 0)
 		return "Wound Attack Potion";
-	else if(def < 0)
+	else if (def < 0)
 		return "Wound Defence Potion";
-	else
-		return "Neutral Potion";
+	return "Mystery Potion";
 }
 
 	

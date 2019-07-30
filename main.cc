@@ -16,16 +16,16 @@ shared_ptr <Player> createPlayer(string cmd){
 			you = (make_shared <BasicPlayer> ());
 		}
 		else if(cmd == "e"){
-			you = (make_shared <BasicPlayer> (140, 30, 10));
+			you = (make_shared <BasicPlayer> (140, 30, 10, "Elf"));
 			you = make_shared <ElfDecorator> (you);
 		}
 		else if(cmd == "d"){
-			you = (make_shared <BasicPlayer> (100, 20, 30));
+			you = (make_shared <BasicPlayer> (100, 20, 30, "Dwarf"));
 			you = make_shared <DwarfDecorator> (you);
 		}
 		else if(cmd == "o"){
-			you = (make_shared <BasicPlayer> (180, 30, 25));
-		//	you = make_shared <OrcDecorator> (you);
+			you = (make_shared <BasicPlayer> (180, 30, 25, "Orc"));
+			you = make_shared <OrcDecorator> (you);
 		}
 		else
 			throw InvalidInput{};
@@ -43,10 +43,11 @@ int main(int argc, char *argv[]){
 	ifstream myfile {argv[1]};
 
 	//game essentials
+	cout << "Ready for an adventure?" << endl;
 	
 	shared_ptr <Player> you;
 	string cmd;
-	cout << "Please enter your race ^ ^";
+	cout << "Please enter your race ^ ^" << endl;
 	
 	//setting up player race
 	cin >> cmd;
@@ -97,12 +98,15 @@ int main(int argc, char *argv[]){
 		try{
 
 			if(cmd == "q"){
-				//display something
+				cout << "If heroes run and hide, who will stay and fight? See you next time." << endl;
 				return 0;
 			}
 			else if(cmd == "next"){
 				game.nextFloor();
-				cout << "You have completed all levels, press any key to continue." << endl;
+				
+				if(!game.getStatus()){
+					cout << "You have completed all levels, press any key to continue." << endl;
+				}
 			}	
 
 			else if(cmd == "r"){
@@ -141,7 +145,7 @@ int main(int argc, char *argv[]){
 						game.generateEnemyMove(e);
 					}
 				}
-
+			
 				cout << game; //print the game board
 			}
 
@@ -149,7 +153,7 @@ int main(int argc, char *argv[]){
 			cerr << "Seems like you are purposefully crashing the game, good-bye!" << endl;
 			return 1;
 		} catch(InvalidMove &e){
-			cerr << "Invalid move, try again!" << endl;
+			cout << game;
 		}
 			
 	}	
