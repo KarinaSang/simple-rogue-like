@@ -46,6 +46,7 @@ int main(int argc, char *argv[]){
 	
 	shared_ptr <Player> you;
 	string cmd;
+	cout << "Please enter your race ^ ^";
 	
 	//setting up player race
 	cin >> cmd;
@@ -87,7 +88,7 @@ int main(int argc, char *argv[]){
 			cout << "Game over! Please enter q to quit or r to restart." << endl;
 			cin >> cmd;
 			
-			while(cmd != "q" || cmd != "r"){
+			while(cmd != "q" && cmd != "r"){
 				cerr << "Invalid Input!" << endl;
 				cin >> cmd;
 			}
@@ -101,11 +102,14 @@ int main(int argc, char *argv[]){
 			}
 			else if(cmd == "next"){
 				game.nextFloor();
-			}
+				cout << "You have completed all levels, press any key to continue." << endl;
+			}	
+
 			else if(cmd == "r"){
 				you = nullptr;
 				
 				//setting up player race
+				cout << "Please enter your race ^ ^";
 				cin >> cmd;
 				you = createPlayer(cmd);
 
@@ -128,15 +132,18 @@ int main(int argc, char *argv[]){
 				Position temp = game.getPos(cmd);
 				game.playerMove(temp.x, temp.y, cmd);
 			}
-			
-			//enemy attacks or moves
-			for(auto &e : game.getEnemy()){
-				if(!game.enemyRadiusCheck(e)){
-					game.generateEnemyMove(e);
-				}
-			}
 
-			cout << game; //print the game board
+			if(game.getStatus()){
+			
+				//enemy attacks or moves
+				for(auto &e : game.getEnemy()){
+					if(!game.enemyRadiusCheck(e)){
+						game.generateEnemyMove(e);
+					}
+				}
+
+				cout << game; //print the game board
+			}
 
 		} catch(InvalidInput &e){
 			cerr << "Seems like you are purposefully crashing the game, good-bye!" << endl;

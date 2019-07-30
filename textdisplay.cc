@@ -15,7 +15,7 @@ bool TextDisplay::floodFill(vector <Position> &v, vector<vector<bool>> &visited,
 	
 	if(visited[x][y])
 		return true;
-	else if(theDisplay[x][y] == '|' || theDisplay[x][y] == '-')
+	else if(theDisplay[x][y] == '|' || theDisplay[x][y] == '-' || theDisplay[x][y] == '+')
 		return true;
 	else if(theDisplay[x][y] == '@')
 		return false;
@@ -175,6 +175,7 @@ void TextDisplay::generate(int floor){
 istream &operator>> (istream&in, TextDisplay &td){
 	char c;
 	td.theDisplay.resize(td.BOARDHEIGHT);
+	td.posV.clear();
 
 	for(int i = 0; i < td.BOARDHEIGHT; ++i){
 		td.theDisplay[i].resize(td.BOARDWIDTH+1);

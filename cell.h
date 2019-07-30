@@ -28,7 +28,7 @@ class Cell{
 	
 
 	public:
-	Cell(int row, int col, char display);
+	Cell(int row = 0, int col = 0, char display = ' ');
 
 	//getter
 	shared_ptr<Player> getPlayer(){return player;}
@@ -40,6 +40,8 @@ class Cell{
 	char getDisplay(){return display;}
 
 	//setter
+	void setRow(int n){ row = n;}
+	void setCol(int n){col = n;}
 	void addPlayer(shared_ptr<Player> p){player = make_shared<Player>(*p);}
 	void addEnemy(shared_ptr<Enemy> e){enemy = make_shared<Enemy>(*e);}
 	void addPotion(shared_ptr<Potion> p){potion = make_shared<Potion>(*p);}
