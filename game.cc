@@ -119,7 +119,8 @@ void Game::init(){
 									td->setChar(i+a, j+b, 'G'); //set textdisplay back to G
 								}
 								
-								shared_ptr<Enemy> d = make_shared<BasicEnemy>(150, 20, 20, "Dragon", 'D', i+a, j+b); //create dragon guarding dragon hoard
+								shared_ptr<Enemy> d = make_shared<BasicEnemy>(150, 20, 20, "Dragon", 'D'); //create dragon guarding dragon hoard
+								d->setTreasure(i+a, j+b);
 								d = make_shared<Dragon>(d);
 								grid[i][j].addEnemy(d);
 								enemy.emplace_back(Position {i,j});

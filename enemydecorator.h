@@ -26,6 +26,7 @@ class EnemyDecorator : public Enemy {
 	virtual void addDef(int n) {e->addDef(n);}
 	virtual void setValue(int n) {e->setValue(n);}
 	virtual void setCompass(){e->setCompass();}
+	virtual void setTreasure(int x, int y){e->setTreasure(x, y);}
 
 	virtual string specialAbility(shared_ptr<Player> p){return e->specialAbility(p);} //CAN IMPLEMENT stealing health/gold from a player
 	virtual int attack(shared_ptr<Player> p){return e->attack(p);}
