@@ -18,10 +18,10 @@ class Enemy{
 	string race;
 	char display;
 	int value;
-	Position treasure;
+	Position treasure {0, 0};
 
 	public:
-	Enemy(int hp, int atk, int def, string race, char display, int value, int x, int y);
+	Enemy(int hp, int atk, int def, string race, char display, int value);
 
 	//getter methods
 	virtual int getHp() {return info.hp;}
@@ -44,6 +44,10 @@ class Enemy{
 	virtual void addDef(int n) {info.def += n;}
 	virtual void setValue(int n) {value = n;}
 	virtual void setCompass(){hasCompass = true;}
+	virtual void setTreasure(int x, int y){
+		treasure.x = x;
+		treasure.y = y;
+	}
 
 	virtual string specialAbility(shared_ptr<Player> p) {return "";} //CAN IMPLEMENT stealing health/gold from a player
 	virtual int attack(shared_ptr<Player>);

@@ -6,9 +6,9 @@ struct Position{
 	int x;
 	int y;
 
-	Position operator=(Position p2){
-		return Position{p2.x, p2.y};
-	}
+//	Position operator=(Position p2){
+//		return Position{p2.x, p2.y};
+//	}
 
 	bool operator==(Position p2){
 		if(x == p2.x && y == p2.y)

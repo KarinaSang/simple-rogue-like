@@ -1,13 +1,11 @@
 #include "enemy.h"
 #include "player.h"
 
-Enemy::Enemy(int hp, int atk, int def, string race, char display, int value, int x, int y):
+Enemy::Enemy(int hp, int atk, int def, string race, char display, int value):
 	race{race}, display{display}, value{value}{
 		info.hp = hp;
 		info.atk = atk;
 		info.def = def;
-		treasure.x = x;
-		treasure.y = y;
 	}
 
 
