@@ -47,6 +47,7 @@ class Game{
 	const int TOTALFLOOR = 5;
 
 	bool getStatus() {return gameStatus;}
+	int getFloorCount() {return floorCount;}
 
 	//setter
 	void setDisplay(shared_ptr <TextDisplay> temp){td = temp;}

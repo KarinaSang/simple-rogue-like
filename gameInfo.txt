@@ -1,0 +1,4 @@
+List of Enemies:
+V - Vampire, 25% health steal from player
+T - Troll, 25% health regen
+G - Goblin 10% gold steal

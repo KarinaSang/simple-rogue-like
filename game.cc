@@ -3,6 +3,10 @@
 #include "basicenemy.h"
 #include "dragon.h"
 #include "merchant.h"
+#include "trolldecorator.h"
+#include "vampiredecorator.h"
+#include "goblindecorator.h"
+
 
 Game::Game(shared_ptr <Player> p): curP{p} {
 	srand(time(0));
@@ -59,7 +63,8 @@ void Game::init(){
 					break;
 				}
 				case 'V':{ //vampire
-					shared_ptr<Enemy> v = make_shared<BasicEnemy>(50, 25, 25, "Vampire", 'V');
+					shared_ptr<Enemy> v = make_shared <BasicEnemy> (50, 25, 25, "Vampire", 'V');
+				//	v = make_shared <VampireDecorator> (v);
 					grid[i][j].addEnemy(v);
 					enemy.emplace_back(Position {i,j});
 					break;
@@ -72,6 +77,7 @@ void Game::init(){
 				}
 				case 'N':{ //goblin
 					shared_ptr<Enemy> n = make_shared<BasicEnemy>(70, 5, 10, "Globlin", 'N');
+				//	n = make_shared<GoblinDecorator>(n);
 					grid[i][j].addEnemy(n);
 					enemy.emplace_back(Position {i,j});
 					break;
@@ -84,6 +90,7 @@ void Game::init(){
 				}
 				case 'T':{ //troll
 					shared_ptr<Enemy> t = make_shared<BasicEnemy>(120, 25, 15, "Troll", 'T');
+				//	t = make_shared<TrollDecorator>(t);
 					grid[i][j].addEnemy(t);
 					enemy.emplace_back(Position {i,j});
 					break;
@@ -205,14 +212,14 @@ void Game::reset (shared_ptr <Player> p){
 
 
 void Game::nextFloor(){
-	if(floorCount == TOTALFLOOR){ //finished all floors
+	++floorCount;
+	if(floorCount > TOTALFLOOR){ //finished all floors
 		gameStatus = false;
 		return;
 	}
 
 	mHostility = false;
 	curP->resetPlayer();
-	++floorCount;
 	td = make_shared <TextDisplay> (floorplan[floorCount-1]);
 	msg = "Welcome to level " + to_string(floorCount) + " ";
 	msg2 = "";
@@ -459,10 +466,23 @@ bool Game::enemyRadiusCheck(Position e){
 	if(abs(player.x-e.x)<= 1 && abs(player.y-e.y) <= 1){
 		int n = temp->attack(curP); //enemy attacks
 	
-		if(n == 0)
+		if(n == 0){
 			msg += temp->getRace() + " missed! ";
-		else
+		}
+		else{
 			msg += temp->getRace() + " dealt " + to_string(n) + " damage to you. ";
+
+			if(temp->getRace() == "Vampire"){
+				temp = make_shared <VampireDecorator> (temp);
+			}
+			else if(temp->getRace() == "Goblin"){
+				temp = make_shared <GoblinDecorator> (temp);
+			}
+			else if(temp->getRace() == "Troll"){
+				temp = make_shared <TrollDecorator> (temp);
+			}
+			msg2 += temp->specialAbility(curP);
+		}
 		
 		//if player is dead
 		if(curP->isDead()){
