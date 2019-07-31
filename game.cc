@@ -279,7 +279,6 @@ void Game::playerMove(int x, int y, string dir){
 	//if the player will be moving to stairs
 	if(grid[newX][newY].isStairs()){
 		nextFloor();
-		msg = "You have entered Floor " + floorCount;
 		return;
 	}
 
@@ -336,7 +335,13 @@ void Game::playerAttack(int x, int y){
 				
 				//the dragon hoard/barrier suit is now collectable
 				grid[tempT.x][tempT.y].getTreasure()->setCollectable();
-				msg2 += "The dragon hoard is now collectable! ";
+				if(grid[tempT.x][tempT.y].getTreasure()->isSuit()){
+					msg2 += "The Barrier Suit is now collectable! ";
+				}
+				else{
+					msg2 += "The dragon hoard is now collectable! ";
+
+				}
 
 				if(temp->getCompass()){
 						msg2+= "Dragon dropped a Compass! ";
@@ -423,6 +428,7 @@ void Game::playerCollect(int x, int y, string dir){
 
 		if(temp->isSuit()){
 			curP->suitToggle();
+			grid[player.x+x][player.y+y].setDisplay('.');
 			msg2 = "You are now equipped with the Barrier Suit. ";
 		}
 		else if(temp->isCompass()){
