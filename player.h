@@ -11,7 +11,6 @@ using namespace std;
 
 class Player{
 	int gold = 0; //default to have zero gold
-	char display = '@'; //letter representing the player
 
 	//items
 	bool suitEquipped = false;
@@ -22,7 +21,7 @@ class Player{
 
 	public:
 	Player(int hp, int atk, int def, string race);
-
+	virtual ~Player();
 	//getter methods
 	virtual CharacterInfo getCurInfo(){return curInfo;}
 	virtual CharacterInfo getDefaultInfo() {return defaultInfo;}

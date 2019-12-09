@@ -8,6 +8,7 @@ Enemy::Enemy(int hp, int atk, int def, string race, char display, int value):
 		info.def = def;
 	}
 
+Enemy::~Enemy(){}
 
 int Enemy::attack(shared_ptr <Player> p){
 	//implement 50%of missing the attack

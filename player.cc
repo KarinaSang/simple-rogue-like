@@ -10,6 +10,8 @@ Player::Player(int hp, int atk, int def, string race){
 	this->race = race;
 }
 
+Player::~Player(){}
+
 void Player::resetPlayer(){
 	curInfo.atk = defaultInfo.atk;
 	curInfo.def = defaultInfo.def;

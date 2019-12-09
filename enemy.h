@@ -22,6 +22,7 @@ class Enemy{
 
 	public:
 	Enemy(int hp, int atk, int def, string race, char display, int value);
+	virtual ~Enemy();
 
 	//getter methods
 	virtual int getHp() {return info.hp;}
